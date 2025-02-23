@@ -1,0 +1,8 @@
+[tools]
+python = "latest"
+
+[tasks.streamlit-run]
+run = 'cd streamlit-samples && uv run streamlit run streamlit_app.py'
+[tasks.gradio-run]
+run = 'cd gradle-samples && uv run streamlit run streamlit_app.py'
+
