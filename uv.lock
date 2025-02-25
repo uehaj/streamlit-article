@@ -8,13 +8,6 @@ resolution-markers = [
     "python_full_version == '3.12.*'",
 ]
 
-[manifest]
-members = [
-    "gradio-samples",
-    "streamlit-article",
-    "streamlit-samples",
-]
-
 [[package]]
 name = "aiofiles"
 version = "23.2.1"
@@ -473,11 +466,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/f2/98/434f4eff6eabf625e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/16/52/4fe9dfc2239e7b748ad8dc3b80ad8755f5c9378432715193586c3ab74bf9/gradio_client-1.7.1-py3-none-any.whl", hash = "sha256:d7737bc473a2093549c06004379c42f0a3510a98095cf7cea9033837e252149f", size = 321994 },
 ]
-
-[[package]]
-name = "gradio-samples"
-version = "0.1.0"
-source = { virtual = "gradio-samples" }
 
 [[package]]
 name = "h11"
@@ -1653,11 +1641,6 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "streamlit", specifier = ">=1.42.0" },
 ]
-
-[[package]]
-name = "streamlit-samples"
-version = "0.1.0"
-source = { virtual = "streamlit-samples" }
 
 [[package]]
 name = "tenacity"
