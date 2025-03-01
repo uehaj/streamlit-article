@@ -8,13 +8,13 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 st.title("チャットAI")
 
+# システムプロンプトを初期設定
 if "message_history" not in st.session_state:
   st.session_state.message_history = [
-    {"role": "system", "content": "あなたは親切なAIチャットボットです。"}
+    {"role": "system", "content": "あなたは親切なAIチャットボットです。"},
   ]
 
-def get_chat_completion(user_input: str, messages) -> str:
-  """OpenAI API を使用してチャットのレスポンスを取得する"""
+def chat_completion(messages) -> str:
   response = openai.chat.completions.create(
     model="gpt-4o-mini",
     messages=messages,
@@ -28,9 +28,10 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):
       st.chat_message(message["role"]).write(message["content"])
   st.session_state.message_history.append(
     {"role": "user", "content": user_input})
-  st.chat_message('user').write(user_input)
+  with st.chat_message('user'):
+    st.write(user_input)
   with st.chat_message('ai'):
-    answer = st.write_stream(get_chat_completion(
-      user_input, st.session_state.message_history))
+    answer = st.write_stream(chat_completion(
+      st.session_state.message_history))
   st.session_state.message_history.append(
     {"role": "assistant", "content": answer})
