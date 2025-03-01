@@ -22,11 +22,13 @@ async def chat(message, history):
 
   # OpenAI ChatCompletion APIを呼び出す
   openai = OpenAI(
+    base_url='http://10014343-0.local:11434/v1',
     api_key=os.environ.get("OPENAI_API_KEY")
   )
 
   response = openai.chat.completions.create(
-    model="gpt-3.5-turbo",
+    # model="gpt-3.5-turbo",
+    model="llama3",
     messages=messages
   )
   reply = response.choices[0].message.content
@@ -39,13 +41,14 @@ async def chat(message, history):
 # Gradioのインターフェースを構築
 with gr.Blocks(title="OpenAIチャット") as demo:
   gr.Markdown("## Gradio×OpenAIチャットアプリ")
-  chatbot = gr.Chatbot()
+  chatbot = gr.Chatbot(elem_classes="chatbox")
   with gr.Row():
     txt = gr.Textbox(
       show_label=False,
-      placeholder="メッセージを入力してEnterキーを押すか「送信」ボタンをクリックしてください"
+      placeholder="メッセージを入力してEnterキーを押すか「送信」ボタンをクリックしてください",
+      elem_classes="textbox"
     )
-    send_btn = gr.Button("送信")
+    send_btn = gr.Button("送信", elem_classes="send-btn")
 
   # テキストボックスのEnter送信とボタン送信の両方に対応
   txt.submit(chat, [txt, chatbot], [txt, chatbot])
