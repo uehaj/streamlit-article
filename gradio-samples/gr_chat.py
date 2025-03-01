@@ -21,7 +21,7 @@ print(os.getenv("OPENAI_API_KEY"))
 history: list[str] = []
 
 def yes(message, history):
-  # OpenAI APIを使用して応答を生成
+  # OpenAI(互換)APIを使用して応答を生成
   response = client.chat.completions.create(
     model="gpt-4o-mini",
     # model="llama3",
