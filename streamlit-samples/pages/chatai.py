@@ -17,6 +17,7 @@ if "message_history" not in st.session_state:
 
 def chat_completion(messages) -> str:
   response = openai.chat.completions.create(
+    base_url="http://127.0.0.1:/v1",
     model="gpt-4o-mini",
     messages=messages,
   )
