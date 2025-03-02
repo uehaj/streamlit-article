@@ -1,27 +1,29 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-# OpenAI APIキーを環境変数から取得
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
-st.title("チャットAI")
+client = OpenAI(
+  base_url=os.getenv("BASE_URL"),
+  api_key=os.getenv("OPENAI_API_KEY")
+)
 
-# システムプロンプトを初期設定
+system_prompt = {"role": "system",
+                 "content": "あなたは親切なAIチャットボットです。日本語で回答してください。"}
+
 if "message_history" not in st.session_state:
-  st.session_state.message_history = [
-    {"role": "system", "content": "あなたは親切なAIチャットボットです。"}
-  ]
+  st.session_state.message_history = [system_prompt]
 
 def chat_completion(messages) -> str:
-  response = openai.chat.completions.create(
-    base_url="http://127.0.0.1:/v1",
-    model="gpt-4o-mini",
+  response = client.chat.completions.create(
+    model=os.getenv("MODEL"),
     messages=messages,
   )
   return response.choices[0].message.content
+
+st.title("チャットAI")
 
 if user_input := st.chat_input("聞きたいことを入力してね！"):
   st.session_state.message_history.append(

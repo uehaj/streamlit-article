@@ -1,17 +1,18 @@
+import time
 import gradio as gr
-import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
-import json
 
-# OpenAI APIキーを環境変数から取得
+# OpenAI APIキーを環境変数に設定
 load_dotenv()
 
 client = OpenAI(
-  base_url=os.getenv("BASE_URL"),
+  # base_url=os.getenv("BASE_URL"),
   api_key=os.getenv("OPENAI_API_KEY")
 )
+print(os.getenv("BASE_URL"))
+print(os.getenv("MODEL"))
 
 system_prompt = {"role": "system",
                  "content": "あなたは親切なAIチャットボットです。日本語で回答してください。"}
@@ -20,8 +21,9 @@ def chat_completion(messages) -> str:
   response = client.chat.completions.create(
     model=os.getenv("MODEL"),
     messages=messages,
+    stream=True,
   )
-  return response.choices[0].message.content
+  return response
 
 def chat_response(message: str, history):
   user_message = {"role": "user", "content": message}
@@ -31,7 +33,12 @@ def chat_response(message: str, history):
       *history,
       user_message
     ])
-  return {"role": "assistant", "content": response}
+  ai_message = ""
+  for item in response:
+    chunk = item.choices[0].delta.content
+    if chunk is not None:
+      ai_message += chunk
+    yield ai_message
 
 gr.ChatInterface(fn=chat_response, type="messages",
-                 title="チャットAI").launch()
+                 title="チャットAI(streaming)").launch()

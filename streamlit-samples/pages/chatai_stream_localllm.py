@@ -6,16 +6,10 @@ import os
 # OpenAI APIキーを環境変数から取得
 load_dotenv()
 
-client1 = OpenAI(
-  base_url='http://10014343-0.local:1337/v1',
-  api_key=os.getenv("OPENAI_API_KEY")
-)
-
 client = OpenAI(
-  base_url='http://10014343-0.local:11434/v1',
+  base_url=os.getenv("BASE_URL"),
   api_key=os.getenv("OPENAI_API_KEY")
 )
-
 
 st.title("チャットAI(Streaming)")
 
@@ -27,9 +21,7 @@ if "message_history" not in st.session_state:
 
 def chat_completion_stream(messages):
   response = client.chat.completions.create(
-    # model="gpt-4o-mini",
-    model="llama3",
-    # model="gemma-2-2b-it",
+    model=os.getenv("MODEL")
     messages=messages,
     stream=True,
   )
