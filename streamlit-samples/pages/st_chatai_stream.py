@@ -16,7 +16,6 @@ client = OpenAI(
   api_key=os.getenv("OPENAI_API_KEY")
 )
 
-
 st.title("チャットAI(Streaming)")
 
 # システムプロンプトを初期設定
