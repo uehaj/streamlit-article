@@ -9,8 +9,8 @@ import json
 load_dotenv()
 
 client = OpenAI(
-  base_url='http://localhost:1337/v1',
-  #  base_url='http://localhost:11434/v1',
+  # base_url='http://localhost:1337/v1',
+  base_url='http://localhost:11434/v1',
   api_key=os.getenv("OPENAI_API_KEY")
 )
 
