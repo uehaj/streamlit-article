@@ -10,7 +10,7 @@ load_dotenv()
 
 client = OpenAI(
   # base_url='http://localhost:1337/v1',
-  base_url='http://localhost:11434/v1',
+  base_url=os.getenv("BASE_URL"),
   api_key=os.getenv("OPENAI_API_KEY")
 )
 
@@ -19,13 +19,12 @@ system_prompt = {"role": "system",
 
 def chat_completion(messages) -> str:
   response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model=os.getenv("MODEL"),
     messages=messages,
   )
   return response.choices[0].message.content
 
 def chat_response(message: str, history):
-  print(json.dumps(history, indent=4, ensure_ascii=False))
   user_message = {"role": "user", "content": message}
   response = chat_completion([system_prompt, *history, user_message])
   answer = {"role": "assistant", "content": response}
