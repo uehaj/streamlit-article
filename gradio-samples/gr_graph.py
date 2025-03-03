@@ -1,10 +1,6 @@
 import gradio as gr
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
-
-# バックエンドを変更
-matplotlib.use('Agg')
 
 def quadratic_plot(a, b, c):
   # x軸の値を-10から10まで生成
@@ -23,13 +19,16 @@ def quadratic_plot(a, b, c):
 
 # Gradioインターフェースの定義
 with gr.Blocks() as demo:
-  gr.Markdown("# 二次関数グラフ表示アプリ")
+  gr.Markdown("# 二次関数グラフ表示")
   gr.Markdown("下のスライダーで係数 \(a\), \(b\), \(c\) を調整するとグラフが自動更新されます。")
 
   with gr.Row():
-    a_slider = gr.Slider(minimum=-10, maximum=10, step=0.1, value=1, label="a")
-    b_slider = gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="b")
-    c_slider = gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="c")
+    a_slider = gr.Slider(minimum=-10, maximum=10,
+                         step=0.1, value=1, label="係数 a")
+    b_slider = gr.Slider(minimum=-10, maximum=10,
+                         step=0.1, value=0, label="係数 b")
+    c_slider = gr.Slider(minimum=-10, maximum=10,
+                         step=0.1, value=0, label="係数 c")
 
   graph = gr.Plot(value=quadratic_plot(1, 0, 0))  # 初期表示で描画
 
