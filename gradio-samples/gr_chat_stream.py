@@ -7,11 +7,9 @@ import os
 # OpenAI APIキーを環境変数に設定
 load_dotenv()
 
-client = OpenAI(
-  # base_url=os.getenv("BASE_URL"),
-  api_key=os.getenv("OPENAI_API_KEY")
-)
-print(os.getenv("BASE_URL"))
+client = OpenAI()
+print(os.getenv("OPENAI_API_KEY"))
+print(os.getenv("OPENAI_BASE_URL"))
 print(os.getenv("MODEL"))
 
 system_prompt = {"role": "system",
