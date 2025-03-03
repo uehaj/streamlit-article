@@ -15,14 +15,11 @@ with col1:
 
 with col2:
   # リサージュ図形を描画
-  t = np.linspace(0, 2 * np.pi, 100)
+  t = np.linspace(0, 2 * np.pi, 1000)
   x = np.sin(a * t)
   y = np.sin(b * t)
 
   fig, ax = plt.subplots()
   ax.plot(x, y)
-  ax.axhline(0, color='black', linewidth=0.5)
-  ax.axvline(0, color='black', linewidth=0.5)
-
   ax.set_aspect('equal')
   st.pyplot(fig)

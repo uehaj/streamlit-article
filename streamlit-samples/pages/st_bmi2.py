@@ -15,5 +15,4 @@ def main():
   else:
     st.markdown("身長と体重を入力してください")
 
-if __name__ == "__main__":
-  main()
+main()

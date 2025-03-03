@@ -3,19 +3,17 @@ import gradio as gr
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+from typing import Generator, Any, List, Dict
 
 # OpenAI APIキーを環境変数に設定
 load_dotenv()
 
 client = OpenAI()
-print(os.getenv("OPENAI_API_KEY"))
-print(os.getenv("OPENAI_BASE_URL"))
-print(os.getenv("MODEL"))
 
 system_prompt = {"role": "system",
                  "content": "あなたは親切なAIチャットボットです。日本語で回答してください。"}
 
-def chat_completion(messages) -> str:
+def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
   response = client.chat.completions.create(
     model=os.getenv("MODEL"),
     messages=messages,
@@ -23,9 +21,9 @@ def chat_completion(messages) -> str:
   )
   return response
 
-def chat_response(message: str, history):
+def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
   user_message = {"role": "user", "content": message}
-  response = chat_completion(
+  response = chat_completion_stream(
     [
       system_prompt,
       *history,
