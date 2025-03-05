@@ -59,9 +59,9 @@ StreamlitやGradioはいずれも現在進行形で活発な開発が続けら�
 上記において用途は重なりが大きいことに注意ください。つまり、作りやすいかどうかの程度問題こそあれ他方だけでしかできない機能は多くはありません。
 ただ、重要な違いとしては、以下があります。
 
-#### Streamlitは入力や出力実行の過程がそのまま画面配置を決める
+#### Streamlitは入力や出力指示の実行の過程が画面配置を決める
 
-コンソールで実行するコマンドラインプログラムとして以下を考えてみてください
+コンソールで実行するコマンドラインプログラムとして以下を考えてみてください。
 
 ```python
 # コンソール版
@@ -73,12 +73,10 @@ else:
   print("error")
 ```
 
-このコードは「`python3 divide_console.py`」で実行できます。このコードは前段の結果を得て、後段の処理の入力とするような実行の過程が処理順序に対応しています。
-streamlitではこれを以下のように記述します。
+このコードは「`python3 divide_console.py`」で実行できます。このコードは前段の結果を得て、後段の処理の入力とするような実行の過程が処理順序に対応しています。streamlitではこれを以下のように記述します。
 
 ```python
-# streamlit版
-# import streamlit as st
+import streamlit as st
 
 a = st.number_input("A")
 b = st.number_input("B")
@@ -89,7 +87,7 @@ else:
 ```
 
 コンソール版にほぼ対応していることがわかります。これを以下のようにWebアプリとして実行することができます。
-![alt text](<スクリーンショット 2025-02-25 15.07.27.png>)
+<img src="スクリーンショット 2025-02-25 15.07.27.png" width="80%" alt="スクリーンショット">
 
 ここでの`st.number_input`や`st.write`などはStreamlitが用意しているUIコンポーネントですが、これをこの順番で呼び出すことで画面に配置されてUIが構築されます。
 
@@ -109,12 +107,18 @@ GradioのBlockはwith句を用いたビルダーパターンであるが、こ�
 
 ### Streamlit入門
 
+ではここからはそれぞれのフレームワークの利用方法とプログラミングについてそれぞれ簡単に一巡りしていきたいと思います。まずはStreamlitからです。
+
 #### Streamlitのインストール
 
-Streamlitのインストール方法は以下の通りです。
+Pythonがインストールされていることを前提として、Streamlitのインストール方法は以下の通りです。
 
 ```bash
-pip install streamlit
+> mkdir streamlit-sample
+> cd streamlit-sample
+> python3 -m venv venv
+> source ./venv/bin/activate
+> pip install streamlit
 ```
 
 #### 「Hello, world!」と表示するプログラム
@@ -123,15 +127,22 @@ pip install streamlit
 
 リスト1●「hello_streamlit.py」。Streamlitで「Hello, world!」を表示するプログラム
 ```python
-# hello_streamlit.py
 import streamlit as st
 
-st.write("Hello, world!")
+st.write("Hello World")
+
 ```
 
-このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
+こちらをエディタで作成し、保存した上で以下を実行してください。
+
+```bash
+> streamlit run st_hello.py
+```
+
+ブラウザが開いて以下が表示されればOKです。
+
 図1●リスト1の実行結果
-![alt text](<スクリーンショット 2025-02-25 15.07.27.png>)
+<img src="st_hello.png" width="80%" alt="リスト1の実行結果">
 
 #### BMI計算機のプログラム
 
@@ -139,32 +150,68 @@ st.write("Hello, world!")
 
 リスト2●「bmi_streamlit.py」。Streamlitで作ったBMI計算機のプログラム
 ```python
-## bmi_streamlit.py
+## st_bmi.py
 import streamlit as st
 
 def bmi(height, weight):
-    return weight / (height / 100) ** 2
+  return weight / (height / 100) ** 2
 
 def main():
-    if not (height := st.number_input("身長(cm)")):
-        return
-    if not (weight := st.number_input("体重(kg)")):
-        return
-    if height > 0 and weight > 0:
-        bmi_value = bmi(height, weight)
-        st.markdown(f"BMI = {bmi_value:.2f}")
-    else:
-        st.markdown("身長と体重を入力してください")
+  if not (height := st.number_input("身長(cm)")):  # ①
+    return
+  if not (weight := st.number_input("体重(kg)")):  # ②
+    return
+  if height > 0 and weight > 0:
+    bmi_value = bmi(height, weight)
+    st.markdown(f"BMI = {bmi_value:.2f}")
+  else:
+    st.markdown("身長と体重を入力してください")
+
+main()
+
 ```
 
+このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
+
 図2●リスト2の実行例
-![alt text](<スクリーンショット 2025-02-25 15.07.27.png>)
+<img src="スクリーンショット 2025-02-25 15.07.27.png" width="80%" alt="スクリーンショット">
 
-#### リサージュ図形のグラフを描画するプログラム
+#### 二次関数のグラフを描画するプログラム
+
+```python
+import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
+
+def quadratic_plot(a, b, c):
+  x = np.linspace(-10, 10, 400)
+  y = a * x**2 + b * x + c
+  fig, ax = plt.subplots()
+  ax.plot(x, y, label=f'y = {a} x^2 + {b}x + {c}')
+  ax.axhline(0, color='black', linewidth=0.5)
+  ax.axvline(0, color='black', linewidth=0.5)
+  ax.set_xlabel("x")
+  ax.set_ylabel("y")
+  ax.grid(True)
+  ax.legend()
+  return fig
+
+st.title("二次関数グラフ表示")
+col1, col2 = st.columns(2)
+with col1:
+  st.markdown("下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。")
+  a = st.slider("係数 a", min_value=-10.0, max_value=10.0, step=0.1, value=1.0)
+  b = st.slider("係数 b", min_value=-10.0, max_value=10.0, step=0.1, value=0.0)
+  c = st.slider("係数 c", min_value=-10.0, max_value=10.0, step=0.1, value=0.0)
+with col2:
+  fig = quadratic_plot(a, b, c)
+  st.pyplot(fig)
+
+```
+
 （ユーザーが係数a、b、cの値を入力できる）
-<font color="red"> 前段を引きついて「BMIの値が健康範囲に入っているかどうか」をプロットするようなコードでも良いか</font>
 
-リスト3●「qf_streamlit.py」。Streamlitで作った2次関数のグラフを描画するプログラム
+リスト3●「qt_graph2.py」。Streamlitで作った2次関数のグラフを描画するプログラム
 図3●リスト3の実行例
 
 <font color="blue">
@@ -177,10 +224,29 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 </font>
 
 ### Gradio入門
-※できればStreamlitと比較しながら書く
+
 #### Gradioのインストール
+
+
+```bash
+> mkdir gradio-sample
+> cd gradio-sample
+> python3 -m venv venv
+> source ./venv/bin/activate
+> pip install gradio
+```
+
 #### Gradioで 「Hello, world!」と表示するプログラム
 リスト4●「hello_gradio.py」。Gradioで「Hello, world!」を表示するプログラム
+```python
+import gradio as gr
+
+with gr.Blocks() as demo:
+    gr.Markdown("Hello World!")
+
+demo.launch()
+```
+
 図4●リスト4の実行結果
 #### BMI計算機のプログラム
 リスト5●「bmi_gradio.py」。Gradioで作ったBMI計算機のプログラム
