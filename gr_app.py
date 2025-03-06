@@ -1,3 +1,4 @@
+# gr_chatai.py
 import time
 import gradio as gr
 from openai import OpenAI
@@ -36,5 +37,6 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
       ai_message += chunk
     yield ai_message
 
-gr.ChatInterface(fn=chat_response, type="messages",
-                 title="チャットAI(streaming)").launch()
+demo = gr.ChatInterface(fn=chat_response, type="messages",
+                        title="チャットAI(Gradio)")
+demo.launch()

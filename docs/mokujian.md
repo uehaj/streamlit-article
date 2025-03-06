@@ -85,10 +85,7 @@ else:
 ここでの`st.number_input`や`st.write`などはStreamlitが用意しているUIコンポーネントですが、これらをこの順番で呼び出すことで、画面に配置されてUIが構築されます。と同時に、これは処理の順番でもあるのです。
 
 このように、画面構築の処理と、構築されたUIに基づいたプログラムの実行処理の順序が表裏一体になっていることがStreamlitの大きな特徴です。
-
-この特徴により、Google ColaboratoryやJupyter Labs/Notebookなどで作成したコードをstreamlitのアプリに変換するのは容易です。なぜなら、Google Collabなどでも前段のセルの結果をもとにして次の計算を行うため、そのように過程を書き下していけば良いからです。
-
-Streamlitの記述は処理が進むにつれて結果が次々と追加表示されていく処理と相性がよいのです。
+このことは後述します。
 
 #### GradioでのUI構築は配線である
 
@@ -118,7 +115,7 @@ Pythonがインストールされていることを前提として、Streamlit�
 
 次に、Streamlitで「Hello, world!」を表示するプログラムを作成します。
 
-[リスト1●hello_streamlit.py。Streamlitで「Hello, world!」を表示するプログラム]
+[リスト1●st_hello.py。Streamlitで「Hello, world!」を表示するプログラム]
 
 ```python
 # st_hello.py
@@ -153,11 +150,15 @@ st.markdown("""
 """)
 ```
 
-書き換えたPythonコード保存した瞬間に画面は以下のようになります。
+書き換えたPythonコード保存した瞬間に、コードの更新が検出されて画面は以下のようになります。
 
-<img src="img/st_hello2.png" width="80%" />
+<img src="img/st_hello2.png" width="80%" style="border: solid 1px" />
 
-ここで、Rerunをクリックすると「今回だけ再実行」、Always rerunをクリックすると「今後コードを変更したときには毎回自動的に再実行」が行なわれます。いずれかをクリックすると変更されたコードが読み込まれ再実行され、画面は以下のように更新されます。
+
+ここで、Rerunをクリックすると「今回だけ再実行」、Always rerunをクリックすると
+自動ホットリロードが行なわれるようになります。
+
+いずれかをクリックすることで変更コードが再実行され、画面が以下のように更新されます。
 
 <img src="img/st_hello3.png" width="80%" />
 
@@ -184,12 +185,12 @@ if height := st.number_input("身長(cm)"):  # ①
 ```
 
 このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
+ここでは、身長を入力すると体重の入力欄が表示され、体重を入力すると結果が出力されます。
+このように入力を行いつつ、その結果が追加表示されて処理結果がわかるように
+結果が追加されていく処理を簡単に書けることがStreamlitの特徴の一つです。
+つまりコンソールで動作するプログラムや、Google Collabで実行するようなイメージで実行することができるのです
 
-<img src="img/st_bmi.png" width="80%" />
-
-こちらでは、身長を入力する(図1)と体重の入力欄が表示され(図2)、体重を入力すると結果が出力されます(図3)。このように入力を行いながらの逐次主力・入力処理をl簡単に書けることがStreamlitの特徴の一つです。
-
-
+<img src="img/st_bmi_.png" width="80%" />
 
 #### 二次関数を描画するプログラム
 
@@ -268,7 +269,7 @@ with gr.Blocks() as demo:
 demo.launch()
 ```
 
-<img src="img/gr_hello.png" width="70%" />
+<img src="img/gr_hello.png#?!" width="70%" />
 
 #### BMI計算機のプログラム
 
@@ -345,8 +346,8 @@ demo.launch()
 
 <img src="img/gr_graph.png" width="80%" />
 
+
 ### チャットAIを作ってみよう
-（※弊社では今のところ、「AIチャット」ではなく「チャットAI」と表記している）
 
 OllamaとLLM（※gemma2あたりがおすすめ）を導入（※この部分の説明は簡潔に。多少、略していてもOK）
 #### StreamlitでチャットAIを作る
@@ -363,9 +364,9 @@ OPENAI_BASE_URL=http://local:11434/v1
 MODEL=gemma:7b
 ```
 
-[リスト7●「st_chat.py」。Streamlitで作ったチャットAIのプログラム]
+[リスト7●「st_chatai.py」。Streamlitで作ったチャットAIのプログラム]
 ```python
-# st_chat.py
+# st_chatai.py
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -413,7 +414,7 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):
     {"role": "assistant", "content": answer})
 ```
 
-<img src="img/st_chat.png" width="70%" />
+<img src="img/st_chatai.png" width="70%" />
 
 #### GradioでチャットAIを作る
 リスト8●「gr_chatai.py」。Gradioで作ったチャットAIのプログラム
@@ -458,12 +459,12 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
       ai_message += chunk
     yield ai_message
 
-gr.ChatInterface(fn=chat_response, type="messages",
-                 title="チャットAI(Gradio)").launch(share=True)
-
+demo = gr.ChatInterface(fn=chat_response, type="messages",
+                        title="チャットAI(Gradio)")
+demo.launch()
 ```
 
-<img src="img/gr_chat.png" width="70%" />
+<img src="img/gr_chatai.png" width="70%" />
 
 <font color="blue">(カラム)
 マルチページアプリの開発方法、StreamlitとGradioそれぞれで
