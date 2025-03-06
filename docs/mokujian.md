@@ -1,22 +1,11 @@
-■タイトル
-## 特集
 # 人気の二大Python Web UIフレームワークを使い分けよう
-### Streamlit ＆ Gradio入門
+## Streamlit ＆ Gradio入門
 
 | 項目  | 内容 |
 |-|-|
 | 掲載予定 | 日経ソフトウエア2025年5月発売号（7月号） |
 | 分量 | 12～16ページ程度 |
 | 原稿締め切り | 2025年3月中旬 |
-<!--
-## ■備考
-
-- 文体は「ですます」調
-- Pythonのインデントは「半角スペース2文字分」
-- スクリーンショットを撮る際は、フォントを大きめで。ブラウザの表示を適度にズームする。また、ウインドウの四隅の丸の外側が白になるように（スクリーンショットを撮るアプリで設定する。あるいは真っ白なウインドウを背景にしてスクリーンショットを撮る）
-
-## ■構成案
--->
 
 ### はじめに
 
@@ -28,12 +17,12 @@
 
 ### Python Web UIフレームワークとは
 
-そもそもPython Web UIフレームワークとは何でしょうか？ 有名な「Djajgo」や「Flask」、「FastAPI」などのWebフレームワークとは何が違うのでしょうか？ この説明から始めましょう。
+そもそもPython Web UIフレームワークとは何でしょうか？ 有名な「Django」や「Flask」、「FastAPI」などのWebフレームワークとは何が違うのでしょうか？ この説明から始めましょう。
 
 一般に以下がPython Web UIフレームワークの特徴です。
 
 - インタラクティブな処理やグラフ表示など、高度なUIを容易に実現できる。
-- HTML/CSS/JavaScript/SPAなどのフロントエンド特有の開発技術は隠蔽されており、基本的にはこれらを意識せずにPythonコードだけでWebアプリを作成できる
+- HTML/CSS/JavaScript/SPAなどのフロントエンド特有の開発技術は隠蔽されており、基本的にはこれらを意識せずにPythonコードだけでWebアプリを作成できる。
 - ブラウザとサーバ間の通信処理(HTTP)も隠蔽されていてほとんど意識しないでよい。たとえばPOSTやGETなどのHTTPリクエストの存在を意識する必要はない。
 - データベースアクセスなどのバックエンド機能などは機能範囲には含まれずUI開発のみを対象とする。
 
@@ -55,8 +44,7 @@
 |学習コスト|低い。Pythonコードのみ|低い。Pythonコードのみ|高い。Pythonに加えHTML/JS/CSS/HTTPなどフロントエンド技術知識が必要|
 |スケーラビリティ|低|低|高|
 
-
-両者には似たとこもあるのですが、重要な違いをいくつか示しておきます。
+両者には似たところもありますが、重要な違いをいくつか示しておきます。
 
 #### Streamlitは入力や出力指示の実行の過程が画面配置を決める
 
@@ -75,10 +63,6 @@ else:
 ```
 
 このコードは「`python3 divide_console.py`」で実行できます。このコードは前段の結果を得て、後段の処理の入力とするような実行の過程が処理順序に対応しています。streamlitではこれを以下のように記述します。
-このコードは「`python3 inputoutput.py`」で実行できます。このコードは、前段のinputでデータを入力し、そのデータを後段の処理の入力しています。つまり実行の過程が処理順序に対応しています。以下のように実行できます。
-
-![alt text](image.png)
-streamlitではこれを以下のように記述します。
 
 [リスト1●st_inputoutput.py。Streamlitで入出力を行うWebアプリケーション]
 
@@ -93,8 +77,6 @@ else:
   st.write("error")
 ```
 
-コンソール版にほぼ対応していることがわかります。これを以下のようにWebアプリとして実行することができます。
-<img src="スクリーンショット 2025-02-25 15.07.27.png" width="80%" alt="スクリーンショット">
 コンソール版にほぼ対応していることがわかります。これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
 <img src="img/st_inputoutput.png" width="80%" />
@@ -109,7 +91,7 @@ Streamlitの記述は処理が進むにつれて結果が次々と追加表示�
 
 #### GradioでのUI構築は配線である
 
-GradioでのUIコードには大きくわけて2つの方法がある。高レベルと低レベル。
+GradioでのUIコードには大きくわけて2つの方法があります。高レベルと低レベル。
 
 Gradioの低レベルな記述では、イベントハンドラを画面部品に設定していく伝統的なGUIライブラリと同様だが、それを大きくまとめる高水準コンポーネントがあり、「配線」のメタファーでコードを簡易に保つ(ここは実は説明図が必要)
 
@@ -118,8 +100,6 @@ GradioのBlockはwith句を用いたビルダーパターンであるが、こ�
 ### Streamlit入門
 
 ではここからはそれぞれのフレームワークの利用方法とプログラミングについてそれぞれ簡単に一巡りしていきたいと思います。まずはStreamlitからです。
-
-ではここから、実際にStreamlitを使って簡単なWebアプリケーションを作成していきましょう。まずは、Streamlitのインストール方法から始めます。
 
 #### Streamlitのインストール
 
@@ -144,8 +124,6 @@ Pythonがインストールされていることを前提として、Streamlit�
 import streamlit as st
 
 st.write("Hello World")
-
-st.write("こんにちは世界!")
 ```
 
 こちらをエディタで作成し、保存した上で以下を実行してください。
@@ -154,23 +132,19 @@ st.write("こんにちは世界!")
 > streamlit run st_hello.py
 ```
 
-ブラウザが開いて以下が表示されればOKです。
-
-図1●リスト1の実行結果
-<img src="st_hello.png" width="80%" alt="リスト1の実行結果">
 このコードを実行し、Webブラウザで開くと以下のようにWebアプリとして実行することができます。
 
 [図1●リスト1の実行結果]
+<img src="img/st_hello.png" width="80%" alt="リスト1の実行結果">
 
-![alt text](img/st_hello.png)
-
-プログラムを実行したままPythonコードを書き換えることでいわゆるホットリローディングを行うことができますが、これを確認するためにst_hello.pyを以下のように書き換えてみます。st.markdownは引数の文字列をMarkdownフォーマットと解釈して画面に表示するStreamlitのUIコンポーネントの一つです。
+ここで、プログラムを実行したままバックグラウンドでPythonコードを書き換えることで、画面表示も更新される、いわゆるホットリローディングを行うことができます。
+たとえば、st_hello.pyを以下のように書き換えてみます。なおここで使用している「st.markdown」は引数の文字列をMarkdownフォーマットと解釈して画面に表示する、StreamlitのUIコンポーネントの一つです。
 
 ```python
 # st_hello2.py
 import streamlit as st
 
-st.write("こんにちは世界!")
+st.write("Hello world!")
 st.markdown("""
 |食品|価格|
 |-|-|
@@ -178,6 +152,7 @@ st.markdown("""
 |たまねぎ|200円|
 """)
 ```
+
 書き換えたPythonコード保存した瞬間に画面は以下のようになります。
 
 ![alt text](img/st_hello2.png)
@@ -212,13 +187,12 @@ def main():
     st.markdown("身長と体重を入力してください")
 
 main()
-
 ```
 
 このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
 
-図2●リスト2の実行例
-<img src="スクリーンショット 2025-02-25 15.07.27.png" width="80%" alt="スクリーンショット">
+[図2●リスト2の実行例]
+![alt text](img/st_bmi.png)
 
 #### 二次関数のグラフを描画するプログラム
 
@@ -250,9 +224,9 @@ with col1:
 with col2:
   fig = quadratic_plot(a, b, c)
   st.pyplot(fig)
-
 ```
 
+```
 （ユーザーが係数a、b、cの値を入力できる）
 if height := st.number_input("身長(cm)"): # ①
   if weight := st.number_input("体重(kg)"): # ②
@@ -273,15 +247,15 @@ if height := st.number_input("身長(cm)"): # ①
 
 #### 二次関数を描画するプログラム
 
-ここではグラフ表示のためにPythonの描画matplotlibを使用するようにします。l
+ここではグラフ表示のためにPythonの描画matplotlibを使用するようにします。
 
 ```
 pip install matplotlib
 ```
 
-リスト3●「qt_graph2.py」。Streamlitで作った2次関数のグラフを描画するプログラム
-図3●リスト3の実行例
-リスト3●「qf_streamlit.py」。Streamlitで作った2次関数のグラフを描画するプログラム
+[図3●リスト3の実行例]
+
+[リスト3●「qf_streamlit.py」。Streamlitで作った2次関数のグラフを描画するプログラム]
 
 ```python
 # st_graph.py
@@ -329,7 +303,6 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 
 #### Gradioのインストール
 
-
 ```bash
 > mkdir gradio-sample
 > cd gradio-sample
@@ -338,38 +311,30 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 > pip install gradio
 ```
 
-
-```bash
-pip install streamlit
-```
-
 #### Gradioで 「Hello, world!」と表示するプログラム
-リスト4●「hello_gradio.py」。Gradioで「Hello, world!」を表示するプログラム
+
+[リスト4●「gr_hello.py」。Gradioで「Hello, world!」を表示するプログラム]
+
 ```python
+# gr_hello.py
 import gradio as gr
 
 with gr.Blocks() as demo:
-    gr.Markdown("Hello World!")
+  gr.Markdown("Hello, world!")
 
 demo.launch()
 ```
 
-```python
-import gradio as gr
-
-with gr.Blocks() as demo:
-    gr.Markdown("こんにちは世界!")
-
-demo.launch()
-```
-
-図4●リスト4の実行結果
+[図4●リスト4の実行結果]
 
 <img src="img/gr_hello.png" width="80%" />>
 
 #### BMI計算機のプログラム
-リスト5●「bmi_gradio.py」。Gradioで作ったBMI計算機のプログラム
+
+[リスト5●「gr_bmi.py」。Gradioで作ったBMI計算機のプログラム]
+
 ```python
+# gr_bmi.py
 import gradio as gr
 
 def bmi(height, weight):
@@ -393,9 +358,10 @@ demo.launch()
 
 #### Gradioで二次関数のグラフを描画するプログラム
 
-[リスト6●「qf_gradio.py」。Gradioで作った2次関数のグラフを描画するプログラム]
+[リスト6●「gr_graph.py」。Gradioで作った2次関数のグラフを描画するプログラム]
 
 ```python
+# gr_graph.py
 import gradio as gr
 import matplotlib
 import numpy as np
@@ -436,13 +402,11 @@ demo = gr.Interface(
 )
 
 demo.launch()
-
 ```
 
 [図6●リスト6の実行例]
 
 ![alt text](image-4.png)
-
 
 ### チャットAIを作ってみよう
 （※弊社では今のところ、「AIチャット」ではなく「チャットAI」と表記している）
@@ -455,14 +419,16 @@ pip install openai python-dotenv
 ```
 [リスト7●「.env」設定ファイル]
 
-```.env
+```bash
+# .env
 OPENAI_API_KEY=dummy
 OPENAI_BASE_URL=http://local:11434/v1
 MODEL=gemma:7b
 ```
 
-[リスト7●「chatai_streamlit.py」。Streamlitで作ったチャットAIのプログラム]
+[リスト7●「st_chat.py」。Streamlitで作ったチャットAIのプログラム]
 ```python
+# st_chat.py
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -515,9 +481,10 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):
 <img src="img/st_chat.png" width="70%" />
 
 #### GradioでチャットAIを作る
-リスト8●「chatai_gradio.py」。Gradioで作ったチャットAIのプログラム
+リスト8●「gr_chatai.py」。Gradioで作ったチャットAIのプログラム
 
 ```python
+# gr_chatai.py
 import time
 import gradio as gr
 from openai import OpenAI
@@ -557,7 +524,7 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
     yield ai_message
 
 gr.ChatInterface(fn=chat_response, type="messages",
-                 title="チャットAI(streaming)").launch(share=True)
+                 title="チャットAI(Gradio)").launch(share=True)
 
 ```
 
