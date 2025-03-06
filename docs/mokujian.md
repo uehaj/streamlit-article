@@ -135,7 +135,6 @@ st.write("Hello, world!")
 
 このコードを実行し、Webブラウザで開くと以下のようにWebアプリとして実行することができます。
 
-[図1●リスト1の実行結果]
 <img src="img/st_hello.png" width="80%" alt="リスト1の実行結果">
 
 ここで、プログラムを実行したままバックグラウンドでPythonコードを書き換えることで、画面表示も更新される、いわゆるホットリローディングを行うことができます。
@@ -156,11 +155,11 @@ st.markdown("""
 
 書き換えたPythonコード保存した瞬間に画面は以下のようになります。
 
-![alt text](img/st_hello2.png)
+<img src="img/st_hello2.png" width="80%" />
 
 ここで、Rerunをクリックすると「今回だけ再実行」、Always rerunをクリックすると「今後コードを変更したときには毎回自動的に再実行」が行なわれます。いずれかをクリックすると変更されたコードが読み込まれ再実行され、画面は以下のように更新されます。
 
-![alt text](img/st_hello3.png)
+<img src="img/st_hello3.png" width="80%" />
 
 #### BMI計算機のプログラム
 
@@ -186,59 +185,10 @@ if height := st.number_input("身長(cm)"):  # ①
 
 このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
 
-[図2●リスト2の実行例]
-![alt text](img/st_bmi.png)
-
-#### 二次関数のグラフを描画するプログラム
-
-```python
-# st_graph.py
-import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
-
-def quadratic_plot(a, b, c):
-  x = np.linspace(-10, 10, 400)
-  y = a * x**2 + b * x + c
-  fig, ax = plt.subplots()
-  ax.plot(x, y, label=f'y = {a} x^2 + {b}x + {c}')
-  ax.axhline(0, color='black', linewidth=0.5)
-  ax.axvline(0, color='black', linewidth=0.5)
-  ax.set_xlabel("x")
-  ax.set_ylabel("y")
-  ax.grid(True)
-  ax.legend()
-  return fig
-
-st.title("二次関数グラフ表示")
-col1, col2 = st.columns(2)
-with col1:
-  st.markdown("下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。")
-  a = st.slider("係数 a", min_value=-10.0, max_value=10.0, step=0.1, value=1.0)
-  b = st.slider("係数 b", min_value=-10.0, max_value=10.0, step=0.1, value=0.0)
-  c = st.slider("係数 c", min_value=-10.0, max_value=10.0, step=0.1, value=0.0)
-with col2:
-  fig = quadratic_plot(a, b, c)
-  st.pyplot(fig)
-```
-
-```
-（ユーザーが係数a、b、cの値を入力できる）
-if height := st.number_input("身長(cm)"): # ①
-  if weight := st.number_input("体重(kg)"): # ②
-    if height > 0 and weight > 0:
-      bmi_value = bmi(height, weight)
-      st.markdown(f"BMI = {bmi_value:.2f}")
-    else:
-      st.markdown("身長と体重を入力してください")
-
-```
+<img src="img/st_bmi.png" width="80%" />
 
 こちらでは、身長を入力する(図1)と体重の入力欄が表示され(図2)、体重を入力すると結果が出力されます(図3)。このように入力を行いながらの逐次主力・入力処理をl簡単に書けることがStreamlitの特徴の一つです。
 
-図2●リスト2の実行例3
-
-<img src="img/st_bmi_.png" width="80%"/>
 
 
 #### 二次関数を描画するプログラム
@@ -248,8 +198,6 @@ if height := st.number_input("身長(cm)"): # ①
 ```
 pip install matplotlib
 ```
-
-[図3●リスト3の実行例]
 
 [リスト3●「qf_streamlit.py」。Streamlitで作った2次関数のグラフを描画するプログラム]
 
@@ -283,8 +231,7 @@ with col2:
 
 [図3●リスト3の実行例]
 
-<img src="img/st_graph.png" width="80%" />
-
+<img src="img/st_graph.png" width="70%" />
 
 <font color="blue">
 (カラム)
@@ -321,9 +268,7 @@ with gr.Blocks() as demo:
 demo.launch()
 ```
 
-[図4●リスト4の実行結果]
-
-<img src="img/gr_hello.png" width="80%" />>
+<img src="img/gr_hello.png" width="70%" />
 
 #### BMI計算機のプログラム
 
@@ -348,9 +293,7 @@ demo = gr.Interface(
 demo.launch()
 ```
 
-[図5●リスト5の実行例]
-
-![alt text](image-3.png)
+<img src="img/gr_bmi.png" width="80%" />
 
 #### Gradioで二次関数のグラフを描画するプログラム
 
@@ -400,9 +343,7 @@ demo = gr.Interface(
 demo.launch()
 ```
 
-[図6●リスト6の実行例]
-
-![alt text](image-4.png)
+<img src="img/gr_graph.png" width="80%" />
 
 ### チャットAIを作ってみよう
 （※弊社では今のところ、「AIチャット」ではなく「チャットAI」と表記している）
@@ -472,8 +413,6 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):
     {"role": "assistant", "content": answer})
 ```
 
-図7●リスト7の実行例
-
 <img src="img/st_chat.png" width="70%" />
 
 #### GradioでチャットAIを作る
@@ -521,12 +460,6 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
 
 gr.ChatInterface(fn=chat_response, type="messages",
                  title="チャットAI(Gradio)").launch(share=True)
-
-```
-
-図8●リスト8の実行例
-
-```
 
 ```
 
