@@ -53,7 +53,7 @@
 [リスト1●inputoutput.py。コンソールで入出力を行うPythonプログラム]
 
 ```python
-# コンソール版
+# inputoutput_console.py
 a = int(input("A="))
 b = int(input("B="))
 if b != 0:
@@ -67,6 +67,7 @@ else:
 [リスト1●st_inputoutput.py。Streamlitで入出力を行うWebアプリケーション]
 
 ```python
+# inputoutput_webapp.py
 import streamlit as st
 
 a = st.number_input("A")
@@ -77,7 +78,7 @@ else:
   st.write("error")
 ```
 
-コンソール版にほぼ対応していることがわかります。これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
+コンソール版のものとほぼ対応していることがわかります。これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
 <img src="img/st_inputoutput.png" width="80%" />
 
@@ -123,7 +124,7 @@ Pythonがインストールされていることを前提として、Streamlit�
 # st_hello.py
 import streamlit as st
 
-st.write("Hello World")
+st.write("Hello, world!")
 ```
 
 こちらをエディタで作成し、保存した上で以下を実行してください。
@@ -144,7 +145,7 @@ st.write("Hello World")
 # st_hello2.py
 import streamlit as st
 
-st.write("Hello world!")
+st.write("Hello, world!")
 st.markdown("""
 |食品|価格|
 |-|-|
@@ -165,28 +166,22 @@ st.markdown("""
 
 次に、StreamlitでBMI計算機のプログラムを作成します。
 
-[リスト2●「st_bmi1」。Streamlitで作ったBMI計算機のプログラム]
+[リスト2●「st_bmi1.py」。Streamlitで作ったBMI計算機のプログラム]
 
 ```python
-## st_bmi.py
 # st_bmi1.py
 import streamlit as st
 
 def bmi(height, weight):
   return weight / (height / 100) ** 2
 
-def main():
-  if not (height := st.number_input("身長(cm)")):  # ①
-    return
-  if not (weight := st.number_input("体重(kg)")):  # ②
-    return
-  if height > 0 and weight > 0:
-    bmi_value = bmi(height, weight)
-    st.markdown(f"BMI = {bmi_value:.2f}")
-  else:
-    st.markdown("身長と体重を入力してください")
-
-main()
+if height := st.number_input("身長(cm)"):  # ①
+  if weight := st.number_input("体重(kg)"):  # ②
+    if height > 0 and weight > 0:
+      bmi_value = bmi(height, weight)
+      st.markdown(f"BMI = {bmi_value:.2f}")
+    else:
+      st.markdown("身長と体重を入力してください")
 ```
 
 このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
@@ -197,6 +192,7 @@ main()
 #### 二次関数のグラフを描画するプログラム
 
 ```python
+# st_graph.py
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -437,8 +433,8 @@ import os
 load_dotenv()
 
 client = OpenAI(
-    base_url=os.getenv("BASE_URL"),
-    api_key=os.getenv("OPENAI_API_KEY")
+  base_url=os.getenv("BASE_URL"),
+  api_key=os.getenv("OPENAI_API_KEY")
 )
 
 system_prompt = {"role": "system",
@@ -450,9 +446,9 @@ if "message_history" not in st.session_state:
 
 def chat_completion_stream(messages):
   response = client.chat.completions.create(
-      model=os.getenv("MODEL"),
-      messages=messages,
-      stream=True,
+    model=os.getenv("MODEL"),
+    messages=messages,
+    stream=True,
   )
   return response
 
@@ -461,7 +457,7 @@ st.title("チャットAI(Streamlit)")
 if user_input := st.chat_input("聞きたいことを入力してね！"):
   # 入力文字列をヒストリに追加
   st.session_state.message_history.append(
-      {"role": "user", "content": user_input})
+    {"role": "user", "content": user_input})
   for message in st.session_state.message_history:
     if message["role"] != "system":
       with st.chat_message(message["role"]):
@@ -470,10 +466,10 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):
   with st.chat_message('ai'):
     # AIの応答を取得
     answer = st.write_stream(chat_completion_stream(
-        st.session_state.message_history))
+      st.session_state.message_history))
   # 回答文字列をヒストリに追加
   st.session_state.message_history.append(
-      {"role": "assistant", "content": answer})
+    {"role": "assistant", "content": answer})
 ```
 
 図7●リスト7の実行例

@@ -1,6 +1,5 @@
-# st_bmi1.py
+# st_bmi.py
 import streamlit as st
-
 
 def bmi(height, weight):
   return weight / (height / 100) ** 2
