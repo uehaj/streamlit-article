@@ -9,9 +9,9 @@
 
 ### はじめに
 
-最近、Python界隈では、美しいインタラクティブなWebアプリケーションを簡単に作成できる「Python Web UIフレームワーク」と呼ばれるフレームワークが人気を集めています。その中でも特に注目を集めているのは「Streamlit」と「Gradio」の二つです。
+最近、Python界隈では、美しいインタラクティブなWebアプリケーションを簡単に作成できる「Python Web UIフレームワーク」と呼ばれるフレームワークが人気を集めています。その中でも特に注目を集めているのは「Streamlit(ストリームリット)」と「Gradio(グレディオ)」の二つです。
 
-これらはいずれもHTMLやJavaScript、HTTPやCSSなどのフロントエンド技術をほとんど知らなくてもPythonのみで開発ができることが特徴です。これらによって、従来は大量のコードを書かなければ実現できなかったレベルのWebアプリケーションを短時間で開発できます。
+これらはいずれもHTMLやJavaScript、HTTPやCSSなどのWebフロントエンド技術をほとんど知らなくてもPythonのみで開発ができることが特徴です。これらによって、従来は大量のコードを書かなければ実現できなかったレベルのWebアプリケーションを短時間で開発できます。
 
 ただし、それぞれのコンセプトや方向性は異なり、開発しようとするアプリケーションの特性に応じて、もしくは自分に向いているものがどちらかを理解して選ぶことが重要です。本稿では、両者の特徴と基本的な使い方を比較を交えながら解説していきます。
 
@@ -22,7 +22,7 @@
 一般に以下がPython Web UIフレームワークの特徴です。
 
 - インタラクティブな処理やグラフ表示など、高度なUIを容易に実現できる。
-- HTML/CSS/JavaScript/SPAなどのフロントエンド特有の開発技術は隠蔽されており、基本的にはこれらを意識せずにPythonコードだけでWebアプリを作成できる。
+- HTML/CSS/JavaScript/SPAなどのWebフロントエンド特有の開発技術は隠蔽されており、基本的にはこれらを意識せずにPythonコードだけでWebアプリを作成できる。
 - ブラウザとサーバ間の通信処理(HTTP)も隠蔽されていてほとんど意識しないでよい。たとえばPOSTやGETなどのHTTPリクエストの存在を意識する必要はない。
 - データベースアクセスなどのバックエンド機能などは機能範囲には含まれずUI開発のみを対象とする。
 
@@ -119,52 +119,36 @@ Pythonがインストールされていることを前提として、Streamlit�
 
 ```python
 # st_hello.py
-import streamlit as st
+import streamlit as st # ①
 
 st.write("Hello, world!")
 ```
 
-こちらをエディタで作成し、保存した上で以下を実行してください。
+まず、①ではStreamlitライブラリをインポートし、stという短縮名で利用できるようにします。次に、②ではWebブラウザに文字列を表示するためにwriteコンポーネントを呼び出します。このコードを作成し保存し、以下のコマンドでWebアプリを起動できます。
 
 ```bash
 > streamlit run st_hello.py
 ```
 
-このコードを実行し、Webブラウザで開くと以下のようにWebアプリとして実行することができます。
+起動後にWebブラウザでlocalhostのポート番号8501を開くと、作成したWebアプリを実行できます。
 
+[図4●リスト1の実行結果]
 <img src="img/st_hello.png" width="80%" alt="リスト1の実行結果">
 
-ここで、プログラムを実行したままバックグラウンドでPythonコードを書き換えることで、画面表示も更新される、いわゆるホットリローディングを行うことができます。
-たとえば、st_hello.pyを以下のように書き換えてみます。なおここで使用している「st.markdown」は引数の文字列をMarkdownフォーマットと解釈して画面に表示する、StreamlitのUIコンポーネントの一つです。
+ここで、プログラムを実行したままバックグラウンドでPythonコードを変更することで、再起動無しでプログラムを置き換えることができる、いわゆるホットリローディングを行うことができます。たとえばst_hello.pyの「st.write("Hello world!")」を「st.write("こんにちは世界")」にエディタで書き換えて保存すると、ブラウザの画面上部に以下が表示されます。
 
-```python
-# st_hello2.py
-import streamlit as st
-
-st.write("Hello, world!")
-st.markdown("""
-|食品|価格|
-|-|-|
-|トマト|100円|
-|たまねぎ|200円|
-""")
-```
-
-書き換えたPythonコード保存した瞬間に、コードの更新が検出されて画面は以下のようになります。
-
+[図4●リスト1の再実行時の画面上部]
 <img src="img/st_hello2.png" width="80%" style="border: solid 1px" />
 
+ここで「Rerun」をクリックすると一回だけの再実行ができます。「Always rerun」をクリックすると変更されるたびに再実行が行なわれるようになります。
 
-ここで、Rerunをクリックすると「今回だけ再実行」、Always rerunをクリックすると
-自動ホットリロードが行なわれるようになります。
-
-いずれかをクリックすることで変更コードが再実行され、画面が以下のように更新されます。
-
-<img src="img/st_hello3.png" width="80%" />
+[図4●リスト1の再実行結果]
+<img src="img/st_hello3.png" width="80%" style="border: solid 1px" />
 
 #### BMI計算機のプログラム
 
-次に、StreamlitでBMI計算機のプログラムを作成します。
+ここではBMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)を
+計算するプログラムをStreamlitで作成してみます。
 
 [リスト2●「st_bmi1.py」。Streamlitで作ったBMI計算機のプログラム]
 
@@ -172,67 +156,142 @@ st.markdown("""
 # st_bmi1.py
 import streamlit as st
 
-def bmi(height, weight):
-  return weight / (height / 100) ** 2
+def bmi(height, weight):  # ①
+  return weight / (height / 100) ** 2  # ②
 
-if height := st.number_input("身長(cm)"):  # ①
-  if weight := st.number_input("体重(kg)"):  # ②
-    if height > 0 and weight > 0:
-      bmi_value = bmi(height, weight)
-      st.markdown(f"BMI = {bmi_value:.2f}")
+if height := st.number_input("身長(cm)"):  # ③
+  if weight := st.number_input("体重(kg)"):  # ④
+    if height > 0 and weight > 0:  # ⑤
+      bmi_value = bmi(height, weight)  # ⑥
+      st.markdown(f"BMI = {bmi_value:.2f}")  # ⑦
     else:
       st.markdown("身長と体重を入力してください")
 ```
 
-このコードを実行し、Webブラウザで特定ポート番号を開くと以下のようにWebアプリとして実行することができます。
-ここでは、身長を入力すると体重の入力欄が表示され、体重を入力すると結果が出力されます。
-このように入力を行いつつ、その結果が追加表示されて処理結果がわかるように
-結果が追加されていく処理を簡単に書けることがStreamlitの特徴の一つです。
-つまりコンソールで動作するプログラムや、Google Collabで実行するようなイメージで実行することができるのです
+プログラムコードを説明していきましょう。まず、①ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。
 
+③④では身長と体重の入力欄を表示し、入力された値をそれぞれheight、weightの変数に保存します。
+「:=」は、Python 3.8で導入された演算子で、式の中で代入を行いながらその値を返す演算子です。
+この演算子を使わないで書くとしたら③のif文は
+
+```python
+height = st.number_input("身長(cm)"):
+if height:
+  :
+```
+
+と書くのと同じです。なお、ここでif文でネストさせずに以下のように並べて書くと,身長(heght)欄と体重(weight)の入力欄は同時に表示されます。
+
+```python
+height = st.number_input("身長(cm)"):
+weight = st.number_input("体重(kg)"):
+```
+
+if文でネストして書くことによって、図4のように身長(heght)が入力された後、初めて体重の入力欄が表示されるようにできます。
+
+[図4●リスト4の実行結果]
 <img src="img/st_bmi_.png" width="80%" />
+
+このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。イベントハンドラをUI部品に紐付けていくような、従来のUIプログラミングとは様相が大きく異なります。
+
+⑤では、入力された身長と体重が正の値であるかを検証し,不正な場合はエラーメッセージを表示し、問題なければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。
+
+<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 80%">
+
+### カラム: if文のネストを避ける方法
+
+if文のネストを使うことで、処理が進行すると同時に結果が下に追記されていくような
+処理はStreamlitでは書きやすいことを示しました。
+しかしこの処理が何段階にも連なっていくと、ネストが深くなってしまいます。
+これを避けるには、リスト4のように関数として切りだしてifの条件を反転させて
+returnすると良いでしょう。
+
+[リスト4●処理の段階が増えてもネストが深くならない記述方法]
+```python
+def main():
+  if not (height := st.number_input("身長(cm)")):
+    return
+  if not (weight := st.number_input("体重(kg)")):
+    return
+  if height > 0 and weight > 0:
+    bmi_value = bmi(height, weight)
+    st.markdown(f"BMI = {bmi_value:.2f}")
+  else:
+    st.markdown("身長と体重を入力してください")
+
+main()
+```
+
+
+</div>
 
 #### 二次関数を描画するプログラム
 
-ここではグラフ表示のためにPythonの描画matplotlibを使用するようにします。
+次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= a^2 + bx + c」のグラフを描画するプログラムです。
+
+まず、準備として、グラフ表示のためにPythonの描画matplotlibをパッケージとしてインストールしておきます。
 
 ```
 pip install matplotlib
 ```
 
-[リスト3●「qf_streamlit.py」。Streamlitで作った2次関数のグラフを描画するプログラム]
+プログラムコードはリスト3の通りです。
+
+[リスト3●「st_graph.py」。Streamlitで作った2次関数のグラフを描画するプログラム]
 
 ```python
 # st_graph.py
 
 import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np               # ①
+import matplotlib.pyplot as plt  # ②
 
 st.title("2次関数のグラフ描画")
 
-col1, col2 = st.columns(2)
-with col1:
-  a = st.number_input("係数 a", value=1.0)
-  b = st.number_input("係数 b", value=0.0)
-  c = st.number_input("係数 c", value=0.0)
-with col2:
-  x = np.linspace(-10, 10, 400)
-  y = a * x**2 + b * x + c
+col1, col2 = st.columns(2)       # ③
+with col1:                       # ④
+  a = st.number_input("係数 a", value=1.0)  # ⑤
+  b = st.number_input("係数 b", value=0.0)  # ⑥
+  c = st.number_input("係数 c", value=0.0)  # ⑦
+with col2:                       # ⑧
+  x = np.linspace(-10, 10, 400)   # ⑨
+  y = a * x**2 + b * x + c        # ⑩
 
-  fig, ax = plt.subplots()
+  fig, ax = plt.subplots()        # ⑪
   ax.plot(x, y, label=f'y = a x^2 + bx + c\na={a}, b={b}, c={c}')
   ax.axhline(0, color='black', linewidth=0.5)
   ax.axvline(0, color='black', linewidth=0.5)
   ax.grid(color='gray', linestyle='--', linewidth=0.5)
   ax.legend()
 
-  st.pyplot(fig)
+  st.pyplot(fig)                 # ⑫
 ```
 
-[図3●リスト3の実行例]
+このプログラムの実行の様子を図3に示します。左側に係数入力フォームが表示され、入力された
+係数に応じて右側に2次関数のグラフが表示されます。
 
+[図3●リスト3の実行例]
 <img src="img/st_graph.png" width="70%" />
+
+コードを説明していきます。
+
+①②では、グラフの描画に必要なNumPyとmatplotlib.pyplotをインポートします。
+
+
+アプリケーションのタイトルを設定し、画面上部に「2次関数のグラフ描画」と表示します。
+③④⑧では「st.columns(2)」をつかって画面を左右の2つのカラムに分割します。
+col1には左側、col2には左側のカラムをわりあて、with句をつかってそれぞれのブロックの内側に部品を配置していきます。
+
+⑤⑥⑦ではそれぞれ係数a,b,cの入力欄を表示します。入力結果は変数a,b,cに格納されます。
+
+⑨x軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
+
+⑫y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax+by+c」を計算します。
+
+⑪以降では、matplotlibを使用して、2次関数のグラフを描画し、軸やグリッドや凡例追加してグラフを作成します。
+
+⑲作成したグラフをStreamlit上に表示し、Webアプリとしてユーザーに結果を提供します。
+
 
 <font color="blue">
 (カラム)
