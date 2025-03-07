@@ -304,7 +304,12 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 
 ### Gradio入門
 
+ここからはGradioの入門編ということでGradioのインストール・実行方法、
+プグラミングについて簡単に解説していきます。
+
 #### Gradioのインストール
+
+Pythonがインストールされていることを前提として、Gradioのインストール方法は以下の通りです。
 
 ```bash
 > mkdir gradio-sample
@@ -316,19 +321,29 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 
 #### Gradioで 「Hello, world!」と表示するプログラム
 
+リスト4は、Gradioを用いて「Hello, world!」を表示するプログラムです。
+
 [リスト4●「gr_hello.py」。Gradioで「Hello, world!」を表示するプログラム]
 
 ```python
 # gr_hello.py
-import gradio as gr
+import gradio as gr # ①
 
-with gr.Blocks() as demo:
-  gr.Markdown("Hello, world!")
+with gr.Blocks() as demo:   # ②
+  gr.Markdown("Hello, world!")   # ③
 
-demo.launch()
+demo.launch() # ④
 ```
-
+[図3●リスト3の実行例]
 <img src="img/gr_hello.png#?!" width="70%" />
+
+以下、解説していきます。
+
+①ではGradioライブラリをインポートし、短縮名としてgrをわりあてています。
+
+②ではレイアウトのためのコンポーネントであるgr.Blocks()を作成し、その内側にコンポーネントを配置する準備をしています。with句を使うとコンテキストが作成され、その内側でのgr.Markdownなどのコンポーネントの呼び出しはそのブロック内に配置されるようになります。作成したkonoブロックをas demoでasという変数に格納しています。
+
+④では、demoに格納されたBocksコンポーネントに対してlaunch()メソッドを呼び出し、Webアプリケーションとして起動します。Streamlitではこのような起動をしなくてもWebアプリとして実行できたのですが、Gradioではlaunchの呼び出しが必要です。
 
 #### BMI計算機のプログラム
 
@@ -338,21 +353,36 @@ demo.launch()
 # gr_bmi.py
 import gradio as gr
 
-def bmi(height, weight):
+def bmi(height, weight):  # ①
   return weight / (height / 100) ** 2
 
-demo = gr.Interface(
-  fn=bmi,
-  inputs=[
-    gr.Number(label="身長 (cm)"),
-    gr.Number(label="体重 (kg)")
+demo = gr.Interface(      # ②
+  fn=bmi,                # ③
+  inputs=[               # ④
+    gr.Number(label="身長 (cm)"),  # ⑤
+    gr.Number(label="体重 (kg)")   # ⑥
   ],
-  outputs=gr.Number(label="BMI")
+  outputs=gr.Number(label="BMI")  # ⑦
 )
 
-demo.launch()
+demo.launch()            # ⑧
 ```
 
+説明していきます。
+
+①ではStreamlit版と全く同じですが、BMIを計算する関数bmiを定義します。
+
+②は関数の高レベルの汎用GUIラッパーであるgr.Interfaceを呼び出し、demoに保存します。
+gr.Interfaceはラッピングする対象の関数fn(③)、
+関数fnへの入力の型式や方法を規定するinputs(④)、
+関数fnの返り値を規定するoutputs(⑦)などを引数として与えます。
+
+⑤⑥は、fnの入力として、身長と体重の数値を入力するためのコンポーネントgr.Numberを与えます。
+
+⑧では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。
+
+
+[図3●リスト3の実行例]
 <img src="img/gr_bmi.png" width="80%" />
 
 #### Gradioで二次関数のグラフを描画するプログラム
@@ -361,14 +391,15 @@ demo.launch()
 
 ```python
 # gr_graph.py
+
 import gradio as gr
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 
-matplotlib.use('Agg')
+matplotlib.use('Agg')                 # ①
 
-def quadratic_plot(a, b, c):
+def quadratic_plot(a, b, c):          # ②
   x = np.linspace(-10, 10, 400)
   y = a * x**2 + b * x + c
 
@@ -384,27 +415,42 @@ def quadratic_plot(a, b, c):
   return fig
 
 # 初期状態のグラフを生成
-initial_plot = quadratic_plot(1, 0, 0)
+initial_plot = quadratic_plot(1, 0, 0)  # ③
 
 # Gradioインターフェースの定義
-demo = gr.Interface(
+demo = gr.Interface(                  # ③
   fn=quadratic_plot,
-  inputs=[
+  inputs=[                            # ④
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=1, label="係数 a"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 b"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
-  outputs=gr.Plot(value=initial_plot),
-  live=True,
+  outputs=gr.Plot(value=initial_plot), # ⑤
+  live=True,                          # ⑥
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
 )
 
-demo.launch()
+demo.launch()                         # ⑦
 ```
+説明していきます。
 
+①は、初期表示のタイミングの問題でエラーにならないようにするための設定です。matplotlibの描画バックエンドとしてAggを使用するものです。
+
+②はStreamlit版の「st_graph.py」の⑨以降の処理とほぼ同じなので説明は割愛します。
+
+③初期値としてa=1,b=0,c=0を渡し、最初に表示するグラフ（初期プロット）を生成します。
+
+Gradioインターフェースの設定は、BMIと入力の方法inputs(④)ほぼ同じですが、
+outputs(⑤)がグラフ描画のコンポーネントgr.Plotであるということが異なります。
+これはquadratic_plotの返り値であるmatplotlibのplotを受けとって表示することができるコンポーントです。
+
+TBD: live=True
+
+⑦では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。
+
+[図3●リスト3の実行例]
 <img src="img/gr_graph.png" width="80%" />
-
 
 ### チャットAIを作ってみよう
 
