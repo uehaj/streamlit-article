@@ -70,15 +70,27 @@ else:
 # inputoutput_webapp.py
 import streamlit as st
 
-a = st.number_input("A")
-b = st.number_input("B")
+a = st.number_input("A") # ①
+b = st.number_input("B") # ②
 if b != 0:
   st.write("A/B = ", a / b)
 else:
   st.write("error")
 ```
 
-コンソール版のものとほぼ対応していることがわかります。これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
+コンソール版のものと、記述の流れほぼと対応していることがわかります。
+<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
+  <ul style="list-style: none; padding: 0; margin: 0;">
+    <li style="margin-bottom: 5px; padding-left: 1.5em; text-indent: -1.5em;"><span style="margin-right: 5px;">⚠</span>
+    ただし、コンソール版とStreamlit版の実行時の動作の違いとしては、
+    コンソール版のinput()は利用者が文字列を入力しエンターキーが押されるまでブロックするのに対して、StreamlitのUIコンポーネント(ここでは「st.number_input()」)は呼び出したときにブロックしません。
+    つまりリスト1の①でaの値が入力されるまで待つわけではないので、
+    ②のbの入力欄は最初から表示されます。
+    このことはStreamlitプログラミングを理解する際の一つのポイントとなります。
+    </li>
+  </ul>
+</div>
+これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
 <img src="img/st_inputoutput.png" width="80%" />
 
@@ -144,11 +156,12 @@ st.write("Hello, world!")
 
 [図4●リスト1の再実行結果]
 <img src="img/st_hello3.png" width="80%" style="border: solid 1px" />
+★★★TODO: 画像を差し変える
 
 #### BMI計算機のプログラム
 
-ここではBMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)を
-計算するプログラムをStreamlitで作成してみます。
+次の題材として、BMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)
+を計算するプログラムをStreamlitで作成してみます。
 
 [リスト2●「st_bmi1.py」。Streamlitで作ったBMI計算機のプログラム]
 
@@ -168,7 +181,7 @@ if height := st.number_input("身長(cm)"):  # ③
       st.markdown("身長と体重を入力してください")
 ```
 
-プログラムコードを説明していきましょう。まず、①ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。
+プログラムを説明していきましょう。まず、①ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。
 
 ③④では身長と体重の入力欄を表示し、入力された値をそれぞれheight、weightの変数に保存します。
 「:=」は、Python 3.8で導入された演算子で、式の中で代入を行いながらその値を返す演算子です。
@@ -180,29 +193,31 @@ if height:
   :
 ```
 
-と書くのと同じです。なお、ここでif文でネストさせずに以下のように並べて書くと,身長(heght)欄と体重(weight)の入力欄は同時に表示されます。
+と書くのと同じです。入力が空(None)であればif文の本体は実行されず、
+身長が入力されると体重の入力欄が表示され、体重の入力をすると結果が表示される、
+という逐次動作を実現しています。(図4●リスト4の実行結果)
+
+ここで仮にif文でネストさせずに、以下のようにフラットに入力欄を
+並べて書くと,身長(heght)欄と体重(weight)の入力欄は同時に表示されます。
 
 ```python
 height = st.number_input("身長(cm)"):
 weight = st.number_input("体重(kg)"):
 ```
 
-if文でネストして書くことによって、図4のように身長(heght)が入力された後、初めて体重の入力欄が表示されるようにできます。
-
 [図4●リスト4の実行結果]
 <img src="img/st_bmi_.png" width="80%" />
 
-このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。イベントハンドラをUI部品に紐付けていくような、従来のUIプログラミングとは様相が大きく異なります。
+このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。
 
-⑤では、入力された身長と体重が正の値であるかを検証し,不正な場合はエラーメッセージを表示し、問題なければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。
+⑤では、入力された身長と体重が0より大きいことをチェックしています。0以下である場合はエラーメッセージを表示し、そうでなければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。
 
-<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 80%">
+<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
 
 ### カラム: if文のネストを避ける方法
+---
 
-if文のネストを使うことで、処理が進行すると同時に結果が下に追記されていくような
-処理はStreamlitでは書きやすいことを示しました。
-しかしこの処理が何段階にも連なっていくと、ネストが深くなってしまいます。
+if文のネストを使うことで、処理結果が次々と追記されていくような処理をStreamlitでは書きやすいことを示しました。しかし処理が何段階にも連なっていくと、if文のネストが深くなってしまいます。
 これを避けるには、リスト4のように関数として切りだしてifの条件を反転させて
 returnすると良いでしょう。
 
@@ -271,26 +286,25 @@ with col2:                       # ⑧
 係数に応じて右側に2次関数のグラフが表示されます。
 
 [図3●リスト3の実行例]
-<img src="img/st_graph.png" width="70%" />
 
-コードを説明していきます。
+<img src="img/st_graph.png" width="90%" />
 
-①②では、グラフの描画に必要なNumPyとmatplotlib.pyplotをインポートします。
+このプログラムを説明していきます。
 
+①②では、グラフの描画に必要なNumPyとMatplotlibの必要なモジュールをインポートします。
 
-アプリケーションのタイトルを設定し、画面上部に「2次関数のグラフ描画」と表示します。
+次にプログラムのタイトルとして「2次関数のグラフ描画」を表示します。
 ③④⑧では「st.columns(2)」をつかって画面を左右の2つのカラムに分割します。
 col1には左側、col2には左側のカラムをわりあて、with句をつかってそれぞれのブロックの内側に部品を配置していきます。
 
-⑤⑥⑦ではそれぞれ係数a,b,cの入力欄を表示します。入力結果は変数a,b,cに格納されます。
+⑤⑥⑦では左側のカラムに係数a,b,cの入力欄を配置します。入力結果は変数a,b,cに格納されます。
 
-⑨x軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
+⑨からは右側のカラムにグラフ表示コンポーネントを配置します。まず、⑨ではx軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
+⑫では、y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax+by+c」を計算します。
 
-⑫y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax+by+c」を計算します。
+⑪以降、matplotlibを使用して、2次関数のグラフを描画し、軸やグリッドや凡例も追加したグラフを作成します。
 
-⑪以降では、matplotlibを使用して、2次関数のグラフを描画し、軸やグリッドや凡例追加してグラフを作成します。
-
-⑲作成したグラフをStreamlit上に表示し、Webアプリとしてユーザーに結果を提供します。
+⑲では、作成したグラフをStreamlit上に配置します。
 
 
 <font color="blue">
@@ -339,7 +353,7 @@ demo.launch() # ④
 
 以下、解説していきます。
 
-①ではGradioライブラリをインポートし、短縮名としてgrをわりあてています。
+①ではGradioライブラリをインポートし、短縮名としてgrを割りあてています。
 
 ②ではレイアウトのためのコンポーネントであるgr.Blocks()を作成し、その内側にコンポーネントを配置する準備をしています。with句を使うとコンテキストが作成され、その内側でのgr.Markdownなどのコンポーネントの呼び出しはそのブロック内に配置されるようになります。作成したkonoブロックをas demoでasという変数に格納しています。
 
@@ -368,9 +382,9 @@ demo = gr.Interface(      # ②
 demo.launch()            # ⑧
 ```
 
-説明していきます。
+プログラムを説明していきます。
 
-①ではStreamlit版と全く同じですが、BMIを計算する関数bmiを定義します。
+①はBMIを計算する関数bmiの定義です。Streamlit版と全く同じものです。
 
 ②は関数の高レベルの汎用GUIラッパーであるgr.Interfaceを呼び出し、demoに保存します。
 gr.Interfaceはラッピングする対象の関数fn(③)、
@@ -433,7 +447,8 @@ demo = gr.Interface(                  # ③
 
 demo.launch()                         # ⑦
 ```
-説明していきます。
+
+プログラムを説明していきます。
 
 ①は、初期表示のタイミングの問題でエラーにならないようにするための設定です。matplotlibの描画バックエンドとしてAggを使用するものです。
 
@@ -454,7 +469,62 @@ TBD: live=True
 
 ### チャットAIを作ってみよう
 
+さて、ここまでは基本的なUIコンポーネントを使用した幾つかのサンプルアプリケーションを作ってきました。最後に、それぞれで生成AIを呼びだして会話を行う、チャットAIアプリケーションをそれぞれで作ってみます。
+
+接続先としてはollamaのOpenAI互換のAPIを経由して、ローカルLLMを呼び出すようにしてみます。
+
+まず、StreamlitとGradioに共通する準備を行います。
+
+#### ollamaのインストール
+
+Windos, Macによって異なりますが、それぞれ公式サイトの説明も参考にしてインストールしてみてください。Macの場合はHomebrewでインストールできます。
+
+```
+brew install ollama
+run gemma2:9b
+```
+
+Windowsの場合は
+TODO: [TBD]
+
+##### dotenvによる環境変数の設定
+
+##### API呼び出しのテスト
+
+
+```
+OPENAI_API_KEY=dummy
+OPENAI_BASE_URL=http://localhost:11434/
+MODEL=gemma:7b
+```
+
+##### 生成AIを呼び出す共通モジュール定義
+
+```python
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+from typing import Generator, Any, List, Dict
+
+# OpenAI APIキーを環境変数に設定
+load_dotenv()
+
+client = OpenAI()
+
+system_prompt = {"role": "system",
+                 "content": "あなたは親切なAIチャットボットです。日本語で回答してください。"}
+
+def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
+  response = client.chat.completions.create(
+    model=os.getenv("MODEL"),
+    messages=messages,
+    stream=True,
+  )
+  return response
+```
+
 OllamaとLLM（※gemma2あたりがおすすめ）を導入（※この部分の説明は簡潔に。多少、略していてもOK）
+
 #### StreamlitでチャットAIを作る
 
 ```bash
