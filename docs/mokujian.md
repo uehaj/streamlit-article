@@ -510,7 +510,7 @@ MODEL=gemma:7b
 from typing import Generator  # ①
 from openai import OpenAI  # ②
 from dotenv import load_dotenv  # ③
-import os  # ④
+import os
 
 load_dotenv()  # ⑤
 
@@ -526,51 +526,45 @@ SYSTEM_PROMPT = {"role": "system",
 def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator[Any, None, None]:
     response = client.chat.completions.create(
         model=os.getenv("MODEL"),  # ⑩
-        messages=messages,         # ⑪
+        messages=messages,
         stream=True,               # ⑫
     )
     return response               # ⑬
 ```
 
 解説
-① from typing import Generator
-　Pythonの型ヒント（Type Hint）用にGeneratorをインポートしています。戻り値の型に-> Generator:と指定することで、この関数がジェネレータ（イテレータの一種）を返すことを明示できます。
 
-② from openai import OpenAI
-　OpenAIライブラリ内のOpenAIクラスをインポートしています。本コードでは、このクラスを使ってOpenAI API（またはAzure OpenAI APIなど）にアクセスするクライアントを作成します。
+① ここからの説明で使用するために、Pythonの型ヒント用の型をいくつかインポートしておきます。
 
-③ from dotenv import load_dotenv
-　.envファイルを読み込み、環境変数をセットしてくれるpython-dotenvライブラリをインポートしています。
+②では、OpenAIが提供する生成AIのAPIを呼び出すためのライブラリ内のOpenAIクラスをインポートしています。
+ollamaやGeminiやClaudeなどはOpenAI互換のAPIを備えているものが多いので、これを経由してAPIを呼び出す
+ことで、切り替えが容易なプログラムとすることができます。
 
-④ import os
-　環境変数にアクセスするためなどにosモジュールを使います。
+③⑤.envファイルを読み込み、環境変数としてセットしてくれるdotenvライブラリをインポートしています。
+.envは、一般にシークレット情報をソースコードとしてハードコーディングを避けるために使用するものです。
+このサンプルコードでは、接続先LLMを設定ファイル中の設定として切りかえることで異なる生成APIを
+切り替えて使用する目的でも使用します。
 
-⑤ load_dotenv()
-　現在のディレクトリや指定されたパスにある.envファイルを探して読み込み、環境変数として登録します。.envファイルにBASE_URLやOPENAI_API_KEYなどを設定している想定です。
+⑥⑦ base_url, api_keyを環境変数から設定します。
 
-⑥ base_url=os.getenv("BASE_URL")
-⑦ api_key=os.getenv("OPENAI_API_KEY")
-　.envファイルから読み取った環境変数BASE_URLおよびOPENAI_API_KEYを使ってクライアントを初期化します。
-　- BASE_URLは、Azure OpenAIなどの場合に必要となる独自のエンドポイントURLを示しているかもしれません。
-　- OPENAI_API_KEYは、OpenAIのAPI認証に必要なキーです。漏洩しないよう注意しましょう。
+⑧チャットシステムで最初に与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleとして以下を使用します。
 
-⑧ SYSTEM_PROMPT
-　チャットシステムで最初に与える「システムメッセージ」です。ここでは「あなたは親切なAIチャットボットです。日本語で回答してください。」という指示をしており、以後の会話はこの方針に沿って生成されます。
+|role||
+|-|-|
+|sytem|システムプロンプト|
+|user|ユーザからのメッセージ|
+|ai|AIアシスタントからの回答|
 
-⑨ def chat_completion_stream(messages) -> Generator:
-　チャットメッセージのリスト（messages）を受け取り、ストリーミング形式の応答を返す関数です。戻り値がGeneratorと定義されています。
+⑨ chat_completion_stream()はメッセージをあらわす辞書のリスト（messages）を受け取り、ストリーミング応答をジェネレータとして返す関数です。
 
-⑩ model=os.getenv("MODEL")
-　.envに記載されているMODELという環境変数から、使用したいモデル名を取得します。例えばgpt-3.5-turboやgpt-4などが想定されます。
+⑩ 使用する生成AIのモデルを環境変数"MODEL"から取得します。
 
 ⑪ messages=messages
 　チャットAPIに送るメッセージ履歴をそのまま渡しています。メッセージは通常、以下のような形式で構成されます。
 
-⑫ stream=True
-　ストリーミングモードを有効にしています。これにより、AIの応答が一括ではなく部分的にチャンクとして返されるようになり、リアルタイムに文字が表示されるような実装を行うことが可能です。
+⑫ ストリーミングモードを有効にしています。この変数がTrueか否かで返り値の型がジェネレータどうかが決定されます。
 
-⑬ return response
-　生成したレスポンス（ジェネレータ）をそのまま返します。この戻り値を受け取って、呼び出し元でチャンクごとにテキストを処理・表示できるようになります。
+⑬ API呼び出しのジェネレータレスポンスをそのまま返します。
 
 #### StreamlitでチャットAIを作る
 
@@ -590,31 +584,31 @@ MODEL=gemma:7b
 
 ```python
 # st_chatai.py
-
-import streamlit as st  # ①
+import streamlit as st
 from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ②
 
 if "message_history" not in st.session_state:  # ③
     st.session_state.message_history = [SYSTEM_PROMPT]
 
-st.title("チャットAI(Streamlit)")  # ④
+st.title("チャットAI(Streamlit)")
 
 if user_input := st.chat_input("聞きたいことを入力してね！"):  # ⑤
-    # 入力文字列をヒストリに追加
+    # 入力文字列をチャット履歴に追加
     st.session_state.message_history.append(  # ⑥
         {"role": "user", "content": user_input}
     )
+    # チャット会話を表示する
     for message in st.session_state.message_history:  # ⑦
         if message["role"] != "system":
             with st.chat_message(message["role"]):  # ⑧
                 st.markdown(message["content"])  # ⑨
 
     with st.chat_message('ai'):  # ⑩
-        # AIの応答を取得
+        # AIの応答を逐次ストリーム取得
         answer = st.write_stream(chat_completion_stream(  # ⑪
             st.session_state.message_history
         ))
-    # 回答文字列をヒストリに追加
+    # 回答文字列をチャット履歴に追加
     st.session_state.message_history.append(  # ⑫
         {"role": "assistant", "content": answer}
     )
@@ -623,47 +617,26 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):  # �
 
 <img src="img/st_chatai.png" width="480px" />
 
-① import streamlit as st
-　Streamlitをインポートしています。Webアプリを素早く構築できるPythonフレームワークです。
+②先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
 
-② from chatai_util import chat_completion_stream, SYSTEM_PROMPT
-　別途用意されたモジュールchatai_utilから、対話のストリーミング応答を返す関数（chat_completion_stream）および初期設定のシステムプロンプト（SYSTEM_PROMPT）をインポートしています。
+③Streamlitのセッション状態を保持する変数st.session_stateに、チャット履歴の初期値を設定する。
+「message_history」というキーがない場合、最初のアクセスまたは未定義状態と判断し、新たにメッセージ履歴（message_history）を
+システムプロンプトを設定するように初期化しています。OpenAI互換のモデルでは、
+LLMはシステムプロンプトを、roleが"system"であるメッセージの履歴として設定します。
 
-③ if "message_history" not in st.session_state:
-　st.session_stateはStreamlitが提供する、セッション（ユーザの対話）ごとの状態を管理する仕組みです。
-　- 「message_history」というキーがない場合、最初のアクセスまたは未定義状態と判断し、新たにメッセージ履歴（message_history）を初期化しています。
-　- 初期化時にSYSTEM_PROMPTを履歴に登録している点に注目してください。
+⑤st.chat_input()はチャット入力欄を含む、チャット画面のためのStreamlitのUIコンポーネントです。
+chat_input()は少し動作が特殊で、画面の下部にチャット入力欄が固定されるようなレイアウトになります。
 
-④ st.title("チャットAI(Streamlit)")
-　Streamlitのアプリタイトルを設定します。Webブラウザ上部に大きく表示されます。
+⑥入力された文字列をroleが"user"のメッセージとして、チャット履歴（message_history）の末尾に追加します。
 
-⑤ if user_input := st.chat_input("聞きたいことを入力してね！"):
-　Streamlitのチャット入力UI（st.chat_input）を使っています。ユーザが送信ボタンを押すと入力文字列がuser_inputに格納され、このif文のブロック内が実行されます。
-　ここでは「聞きたいことを入力してね！」というプレースホルダを表示しています。
+⑦現在までの対話履歴を、システムプロンプトを除いて表示していきます。
+⑧⑨st.chat_messageをwith句を使って呼び出すと、メッセージ中のroleに対応するアイコンを表示した上で、
+メッセージ中のcontentに対応するメッセージをst.writeなどで表示することができます。
 
-⑥ st.session_state.message_history.append({"role": "user", "content": user_input})
-　入力された文字列を「ユーザ」のメッセージとして、対話履歴（message_history）の末尾に追加しています。
-　- ChatGPTのAPIなどではメッセージを「role（役割）」と「content（内容）」に分けるのが一般的です。
+⑩最後に、LLMからの応答メッセージを表示します。st.write_stream()はOpenAI互換のストリーム
+が返すジェネレータに対応いているので、chat_completion_stream()の返り値をそのまま渡すことができます。
 
-⑦ for message in st.session_state.message_history:
-　現在の対話履歴を一通りループします。過去の発話やAIの応答をすべて取り出し、画面に表示させるための処理です。
-
-⑧ with st.chat_message(message["role"]):
-⑨ st.markdown(message["content"])
-　対話履歴上の各メッセージについて、role（"user", "assistant" など）に応じたチャットメッセージ風の吹き出しを作成し、内容（content）をMarkdown形式で表示します。
-　- ここで「system」ロールは画面には表示していないため、⑦のループ内でmessage["role"] != "system"という条件をチェックしています。
-
-⑩ with st.chat_message('ai'):
-　ユーザからの新たな入力に対する「AIの応答」の吹き出しを作成します。チャット画面上でアシスタント（AI）としてメッセージが表示されるようになります。
-
-⑪ answer = st.write_stream(chat_completion_stream(st.session_state.message_history))
-　chat_completion_stream関数に現在の対話履歴を渡し、AIのストリーミング応答を取得します。それをst.write_streamを通じて画面に逐次表示しながら、最終的には変数answerに全文が格納されます。
-　- st.write_streamは内部的に、得られた文字列を少しずつ（チャンクごとに）表示し、リアルタイムに文字が出力される体験ができます。
-
-⑫ st.session_state.message_history.append({"role": "assistant", "content": answer})
-　上で受け取ったAIからの応答メッセージを対話履歴（message_history）に追加します。これにより、次のユーザ入力があっても過去の履歴が保持され、文脈を継続した対話が可能になります。
-
-
+⑫AIからの応答メッセージをチャット履歴（message_history）の末尾に追加します。
 
 #### GradioでチャットAIを作る
 リスト8●「gr_chatai.py」。Gradioで作ったチャットAIのプログラム
@@ -671,23 +644,27 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):  # �
 ```python
 # gr_chatai.py
 
-import gradio as gr  # ①
-from typing import Generator, List, Dict  # ②
+import gradio as gr
+from typing import Generator, List, Dict
 from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ③
 
 def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:  # ④
-    user_message = {"role": "user", "content": message}  # ⑤
-    response = chat_completion_stream([
-        SYSTEM_PROMPT,
-        *history,
-        user_message
-    ])  # ⑥
-    ai_message = ""  # ⑦
-    for item in response:  # ⑧
-        chunk = item.choices[0].delta.content
-        if chunk is not None:
-            ai_message += chunk
-        yield ai_message  # ⑨
+  # ユーザからのメッセージ
+  user_message = {"role": "user", "content": message}  # ⑤
+  # 生成AIのレスポンスはチャンク列のジェネレータ
+  response = chat_completion_stream([
+    SYSTEM_PROMPT,
+    *history,
+    user_message
+  ])  # ⑥
+  ai_message = ""  # ⑦
+  # チャンク列のジェネレータに対してループをまわす
+  for item in response:  # ⑧
+    chunk = item.choices[0].delta.content
+    if chunk is not None:
+      # チャンクJSONのdelta部分を変数ai_messageに累積追加する
+      ai_message += chunk
+  yield ai_message  # ⑨
 
 demo = gr.ChatInterface(fn=chat_response, type="messages",
                         title="チャットAI(Gradio)")  # ⑩
@@ -698,49 +675,28 @@ demo.launch()  # ⑪
 
 <img src="img/gr_chatai.png" width="480px" />
 
-① import gradio as gr
-　Gradioをインポートしています。Gradioは、Pythonスクリプトから簡単にWebアプリのUIを構築できる便利なフレームワークです。
-　ここでは主にチャット用のUI（入力欄や出力欄）を構築するために利用します。
+③先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
 
-② from typing import Generator, List, Dict
-　型アノテーション（Type Hints）を使うために、ジェネレータ型やリスト型、辞書型などをインポートしています。
-　これらを使うことで、引数や戻り値に関する型情報をコード上で明示でき、可読性や保守性が高まります。
+④関数「chat_response()」は、Gradioが用意しているチャットコンポーネントgr.ChatInterfaceにラッピングさせる関数です。
+gr.ChatInterfaceはチャット履歴を管理する機能を持っているので、Streamlit版とは異なり、チャット履歴を管理するコードを書く必要がありません。
 
-③ from chatai_util import chat_completion_stream, SYSTEM_PROMPT
-　chatai_util.pyという別ファイルから2つの関数（もしくは定数）をインポートしています。
+⑤では、LLMに送信するユーザメッセージ「user_message」を作成します。LLMはロールを意識するので、ここではロールとして"user"を設定します。
 
-chat_completion_stream：チャットモデル（例：OpenAIのChatGPT）のストリーミング応答を生成してくれる関数と思われます。
-SYSTEM_PROMPT：チャットシステム向けの初期プロンプト（システムメッセージ）です。チャットAIの役割や挙動の大枠を指示するために使われます。
-④ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
-　Gradioから呼び出される関数です。ユーザが送信したメッセージ（message）と、これまでの対話履歴（history）を受け取り、新しいAI応答メッセージを生成するためのジェネレータを返します。
-　ジェネレータ関数（yieldを含む関数）にすることで、ストリーミング形式で部分的な応答を返せるようになっています。
+⑥SYSTEM_PROMPT、gr.ChatInterfaceかわ渡されたチャット履歴、ユーザメッセージを、
+生成AIアクセス用の共通モジュール「chatai_util.py」で定義したchat_completion_streamを使ってLLMに送信します。
+ストリーミング形式(streaming=True)で応答を取得するので、結果はGeneratorとなります。
 
-⑤ user_message = {"role": "user", "content": message}
-　対話履歴に追加するユーザメッセージを辞書形式で作成しています。ChatGPTなどのAPIでは、メッセージの役割（role）と本文（content）をセットにして扱うのが一般的です。
+⑦AIからストリーミングで帰ってくるメッセージは断片なので、それを結合して保持するための変数を用意します。
+⑧chat_completion_streamから取得した1チャンクずつを、ai_messageに蓄積していきます。
+⑨で、1つの応答文字列が得られたら、それをyieldで返します。
+つまりこの関数chat_response全体は、LLMが返却する応答断片(JSON型式)のジェネレータを、回答単位の文字列のジェネレータに変換していることになります。
 
-⑥ response = chat_completion_stream([...])
-　SYSTEM_PROMPTや既存のhistory、そして新しいユーザメッセージをまとめてchat_completion_streamに渡しています。
-　内部では、これらのメッセージをもとに大規模言語モデル（LLM）へ問い合わせを行い、ストリーミング形式で応答を取得しています。
+⑩Gradioでの簡易チャットコンポーネントであるgr.ChatInterface()を準備します。fnにジェネレータを返す関数を与えることでStreamingに対応する
+表示(プログレッシブな回答の漸増的表示)を行うことができます。ここでtype="messages"はチャットのメッセージ形式で表示するように指定しています。
+タイトルも指定します。
 
-⑦ ai_message = ""
-　AIが生成するメッセージを貯めておくための変数を用意します。最終的に少しずつ受け取ったテキストを連結し、完成した文章をyieldで返す流れになっています。
-
-⑧ for item in response:
-　chat_completion_streamから1チャンクずつ取得します。ストリーミング形式なので、AIが返してくる文章を部分的に受け取るたびにループが1回ずつ回ります。
-
-⑨ yield ai_message
-　部分的にAIが生成した文章をyieldで返すことにより、ブラウザ上のチャットUIにも逐次表示されます。これが「文章がリアルタイムに表示されていく」仕組みのカギとなっています。
-
-⑩ demo = gr.ChatInterface(fn=chat_response, type="messages", title="チャットAI(Gradio)")
-　Gradioのチャット用インターフェイスを初期化しています。
-　- fn=chat_response ：先に定義したchat_response関数を呼び出し、ユーザからの入力に応答します。
-　- type="messages" ：メッセージ形式のインターフェイスでやりとりすることを指定しています。
-　- title="チャットAI(Gradio)" ：ブラウザ上に表示されるアプリのタイトルとして設定します。
-
-⑪ demo.launch()
-　GradioのWebインターフェイスを起動します。デフォルトではローカルホストの特定ポートでWebサーバが起動し、ブラウザからアクセスできるようになります。
-　これで、ユーザがブラウザ上からメッセージを入力すると、chat_responseが呼ばれ、対話型のAI応答がストリーミング表示される仕組みが完成です。
-
+⑪ここでは、demo.launch()でGradioのWebインターフェイスを起動します。
+demo.launch()のデフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
 
 <font color="blue">(カラム)
 マルチページアプリの開発方法、StreamlitとGradioそれぞれで

@@ -1,30 +1,9 @@
 # st_chatai.py
 import streamlit as st
-from openai import OpenAI
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-client = OpenAI(
-  base_url=os.getenv("BASE_URL"),
-  api_key=os.getenv("OPENAI_API_KEY")
-)
-
-system_prompt = {"role": "system",
-                 "content": "あなたは親切なAIチャットボットです。\
-                 日本語で回答してください。"}
+from chatai_util import chat_completion_stream, SYSTEM_PROMPT
 
 if "message_history" not in st.session_state:
-  st.session_state.message_history = [system_prompt]
-
-def chat_completion_stream(messages):
-  response = client.chat.completions.create(
-    model=os.getenv("MODEL"),
-    messages=messages,
-    stream=True,
-  )
-  return response
+  st.session_state.message_history = [SYSTEM_PROMPT]
 
 st.title("チャットAI(Streamlit)")
 
