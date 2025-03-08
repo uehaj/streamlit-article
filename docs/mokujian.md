@@ -79,6 +79,7 @@ else:
 ```
 
 コンソール版のものと、記述の流れほぼと対応していることがわかります。
+
 <div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
   <ul style="list-style: none; padding: 0; margin: 0;">
     <li style="margin-bottom: 5px; padding-left: 1.5em; text-indent: -1.5em;"><span style="margin-right: 5px;">⚠</span>
@@ -90,6 +91,7 @@ else:
     </li>
   </ul>
 </div>
+
 これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
 <img src="img/st_inputoutput.png" width="80%" />
@@ -145,11 +147,13 @@ st.write("Hello, world!")
 起動後にWebブラウザでlocalhostのポート番号8501を開くと、作成したWebアプリを実行できます。
 
 [図4●リスト1の実行結果]
+
 <img src="img/st_hello.png" width="80%" alt="リスト1の実行結果">
 
 ここで、プログラムを実行したままバックグラウンドでPythonコードを変更することで、再起動無しでプログラムを置き換えることができる、いわゆるホットリローディングを行うことができます。たとえばst_hello.pyの「st.write("Hello world!")」を「st.write("こんにちは世界")」にエディタで書き換えて保存すると、ブラウザの画面上部に以下が表示されます。
 
 [図4●リスト1の再実行時の画面上部]
+
 <img src="img/st_hello2.png" width="80%" style="border: solid 1px" />
 
 ここで「Rerun」をクリックすると一回だけの再実行ができます。「Always rerun」をクリックすると変更されるたびに再実行が行なわれるようになります。
@@ -206,6 +210,7 @@ weight = st.number_input("体重(kg)"):
 ```
 
 [図4●リスト4の実行結果]
+
 <img src="img/st_bmi_.png" width="80%" />
 
 このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。
