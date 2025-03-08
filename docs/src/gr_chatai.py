@@ -1,22 +1,28 @@
 # gr_chatai.py
+
 import gradio as gr
 from typing import Generator, List, Dict
 from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ①
 
+# ②
 def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
-  user_message = {"role": "user", "content": message}
+  # ユーザからのメッセージ
+  user_message = {"role": "user", "content": message}  # ③
+  # 生成AIのレスポンスはチャンク列のジェネレータ
   response = chat_completion_stream([
     SYSTEM_PROMPT,
     *history,
     user_message
-  ])
-  ai_message = ""
-  for item in response:
+  ])  # ④
+  ai_message = ""  # ⑤
+  # チャンク列のジェネレータに対してループをまわす
+  for item in response:  # ⑥
     chunk = item.choices[0].delta.content
     if chunk is not None:
+      # チャンクJSONのdelta部分を変数ai_messageに累積追加する
       ai_message += chunk
-    yield ai_message
+  yield ai_message  # ⑦
 
 demo = gr.ChatInterface(fn=chat_response, type="messages",
-                        title="チャットAI(Gradio)")
-demo.launch()
+                        title="チャットAI(Gradio)")  # ⑧
+demo.launch()  # ⑨

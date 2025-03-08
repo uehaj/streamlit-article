@@ -33,7 +33,7 @@ demo = gr.Interface(                  # ③
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 b"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
-  outputs=gr.Plot(value=initial_plot),  # ⑤
+  outputs=gr.Plot(value=initial_plot), # ⑤
   live=True,                          # ⑥
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"

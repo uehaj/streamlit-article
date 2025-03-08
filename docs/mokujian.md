@@ -125,7 +125,7 @@ Pythonがインストールされていることを前提として、Streamlit�
 > pip install streamlit
 ```
 
-#### 「Hello, world!」と表示するプログラム
+#### Streamlitで「Hello, world!」と表示するプログラム
 
 次に、Streamlitで「Hello, world!」を表示するプログラムを作成します。
 
@@ -162,7 +162,7 @@ st.write("Hello, world!")
 <img src="img/st_hello3.png" width="480px" style="border: solid 1px" />
 ★★★TODO: 画像を差し変える
 
-#### BMI計算機のプログラム
+#### StreamlitでのBMI計算機のプログラム
 
 次の題材として、BMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)
 を計算するプログラムをStreamlitで作成してみます。
@@ -218,13 +218,10 @@ weight = st.number_input("体重(kg)"):
 ⑤では、入力された身長と体重が0より大きいことをチェックしています。0以下である場合はエラーメッセージを表示し、そうでなければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。
 
 <div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
+##### カラム: if文のネストを避ける方法
 
-### カラム: if文のネストを避ける方法
----
-
-if文のネストを使うことで、処理結果が次々と追記されていくような処理をStreamlitでは書きやすいことを示しました。しかし処理が何段階にも連なっていくと、if文のネストが深くなってしまいます。
-これを避けるには、リスト4のように関数として切りだしてifの条件を反転させて
-returnすると良いでしょう。
+if文のネストを使うことで、処理結果を次々と表示してくような処理がStreamlitでは書きやすいことを示しました。しかし処理が何段階にも連なっていくとif文のネストが深くなってしまいます。
+これを避けるには、リスト4のようにプログラムのトップレベルを関数にして、継続しないときにifの条件を反転させてreturnするように記述すると良いでしょう。
 
 [リスト4●処理の段階が増えてもネストが深くならない記述方法]
 ```python
@@ -241,11 +238,9 @@ def main():
 
 main()
 ```
-
-
 </div>
 
-#### 二次関数を描画するプログラム
+#### Streamlitで二次関数を描画するプログラム
 
 次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= a^2 + bx + c」のグラフを描画するプログラムです。
 
@@ -364,7 +359,7 @@ demo.launch() # ④
 
 ④では、demoに格納されたBocksコンポーネントに対してlaunch()メソッドを呼び出し、Webアプリケーションとして起動します。Streamlitではこのような起動をしなくてもWebアプリとして実行できたのですが、Gradioではlaunchの呼び出しが必要です。
 
-#### BMI計算機のプログラム
+#### GradioでのBMI計算機のプログラム
 
 [リスト5●「gr_bmi.py」。Gradioで作ったBMI計算機のプログラム]
 
@@ -481,7 +476,7 @@ TBD: live=True
 
 まず、StreamlitとGradioに共通する準備を行います。
 
-#### ollamaのインストール
+#### 準備：ollamaのインストール
 
 Windos, Macによって異なりますが、それぞれ公式サイトの説明も参考にしてインストールしてみてください。Macの場合はHomebrewでインストールできます。
 
@@ -493,20 +488,17 @@ run gemma2:9b
 Windowsの場合は
 TODO: [TBD]
 
-##### dotenvによる環境変数の設定
-
-##### API呼び出しのテスト
-
+#### dotenvによる環境変数の設定
 
 ```
 OPENAI_API_KEY=dummy
 OPENAI_BASE_URL=http://localhost:11434/
 MODEL=gemma:7b
 ```
-
-##### 生成AIを呼び出す共通モジュール定義
+#### 生成AIを呼び出す共通モジュール定義
 
 ```python
+# chatai_util.py
 from typing import Generator  # ①
 from openai import OpenAI  # ②
 from dotenv import load_dotenv  # ③
@@ -698,9 +690,5 @@ gr.ChatInterfaceはチャット履歴を管理する機能を持っているの�
 ⑪ここでは、demo.launch()でGradioのWebインターフェイスを起動します。
 demo.launch()のデフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
 
-<font color="blue">(カラム)
-マルチページアプリの開発方法、StreamlitとGradioそれぞれで
-ページ見合い
-</font>
 
-#### まとめ
+## まとめ

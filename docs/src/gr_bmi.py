@@ -1,16 +1,16 @@
-# gr_bmi.py
 import gradio as gr
 
-def bmi(height, weight):  # ①
+
+def bmi(height, weight):
   return weight / (height / 100) ** 2
 
-demo = gr.Interface(      # ②
-  fn=bmi,                # ③
-  inputs=[               # ④
-    gr.Number(label="身長 (cm)"),  # ⑤
-    gr.Number(label="体重 (kg)")   # ⑥
+demo = gr.Interface(
+  fn=bmi,
+  inputs=[
+    gr.Number(label="身長 (cm)"),
+    gr.Number(label="体重 (kg)")
   ],
-  outputs=gr.Number(label="BMI")  # ⑦
+  outputs=gr.Number(label="BMI")
 )
 
-demo.launch()            # ⑧
+demo.launch()
