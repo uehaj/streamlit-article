@@ -1,4 +1,4 @@
 # st_hello.py
-import streamlit as st
+import streamlit as st # ①
 
 st.write("Hello, world!")

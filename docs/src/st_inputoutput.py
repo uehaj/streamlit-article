@@ -1,7 +1,9 @@
-# コンソール版
-a = int(input("A="))
-b = int(input("B="))
+# st_inputoutput.py
+import streamlit as st
+
+a = st.number_input("A") # ①
+b = st.number_input("B") # ②
 if b != 0:
-  print("A/B = ", a / b)
+  st.write("A/B = ", a / b)
 else:
-  print("error")
+  st.write("error")

@@ -1,12 +1,13 @@
 # gr_graph.py
+
 import gradio as gr
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 
-matplotlib.use('Agg')
+matplotlib.use('Agg')                 # ①
 
-def quadratic_plot(a, b, c):
+def quadratic_plot(a, b, c):          # ②
   x = np.linspace(-10, 10, 400)
   y = a * x**2 + b * x + c
 
@@ -22,20 +23,20 @@ def quadratic_plot(a, b, c):
   return fig
 
 # 初期状態のグラフを生成
-initial_plot = quadratic_plot(1, 0, 0)
+initial_plot = quadratic_plot(1, 0, 0)  # ③
 
 # Gradioインターフェースの定義
-demo = gr.Interface(
+demo = gr.Interface(                  # ③
   fn=quadratic_plot,
-  inputs=[
+  inputs=[                            # ④
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=1, label="係数 a"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 b"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
-  outputs=gr.Plot(value=initial_plot),
-  live=True,
+  outputs=gr.Plot(value=initial_plot), # ⑤
+  live=True,                          # ⑥
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
 )
 
-demo.launch()
+demo.launch()                         # ⑦

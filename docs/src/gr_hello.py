@@ -1,7 +1,7 @@
 # gr_hello.py
-import gradio as gr
+import gradio as gr # ①
 
-with gr.Blocks() as demo:
-  gr.Markdown("Hello, world!")
+with gr.Blocks() as demo:   # ②
+  gr.Markdown("Hello, world!")   # ③
 
-demo.launch()
+demo.launch() # ④

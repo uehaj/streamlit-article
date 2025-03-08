@@ -50,10 +50,10 @@
 
 コンソールで実行するPythonのコマンドラインプログラムとして以下を考えてみてください。
 
-[リスト1●inputoutput.py。コンソールで入出力を行うPythonプログラム]
+[リスト1●cli_inputoutput.py。コンソールで入出力を行うPythonプログラム]
 
 ```python
-# inputoutput_console.py
+# cli_inputoutput.py
 a = int(input("A="))
 b = int(input("B="))
 if b != 0:
@@ -67,7 +67,7 @@ else:
 [リスト1●st_inputoutput.py。Streamlitで入出力を行うWebアプリケーション]
 
 ```python
-# inputoutput_webapp.py
+# st_inputoutput.py
 import streamlit as st
 
 a = st.number_input("A") # ①

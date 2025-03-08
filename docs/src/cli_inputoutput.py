@@ -1,4 +1,4 @@
-# inputoutput_console.py
+# cli_inputoutput.py
 a = int(input("A="))
 b = int(input("B="))
 if b != 0:
