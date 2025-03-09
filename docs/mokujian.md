@@ -188,8 +188,8 @@ if height := st.number_input("身長(cm)"):  # ③
 プログラムを説明していきましょう。まず、①ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。
 
 ③④では身長と体重の入力欄を表示し、入力された値をそれぞれheight、weightの変数に保存します。
-「:=」は、Python 3.8で導入された演算子で、式の中で代入を行いながらその値を返す演算子です。
-この演算子を使わないで書くとしたら③のif文は
+「:=」は、Python 3.8で導入された演算子で、代入と同時にその値を返す演算子です。
+この演算子を使わないで書くとしたら③のif文は、
 
 ```python
 height = st.number_input("身長(cm)"):
@@ -246,8 +246,8 @@ main()
 
 まず、準備として、グラフ表示のためにPythonの描画matplotlibをパッケージとしてインストールしておきます。
 
-```
-pip install matplotlib
+```bash
+❯ pip install matplotlib
 ```
 
 プログラムコードはリスト3の通りです。
@@ -393,7 +393,7 @@ gr.Interfaceはラッピングする対象の関数fn(③)、
 
 ⑤⑥は、fnの入力として、身長と体重の数値を入力するためのコンポーネントgr.Numberを与えます。
 
-⑧では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。
+⑧では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。デフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
 
 
 [図3●リスト3の実行例]
@@ -404,8 +404,7 @@ gr.Interfaceはラッピングする対象の関数fn(③)、
 [リスト6●「gr_graph.py」。Gradioで作った2次関数のグラフを描画するプログラム]
 
 ```python
-# gr_graph.py
-
+## gr_graph.py
 import gradio as gr
 import matplotlib
 import numpy as np
@@ -432,20 +431,20 @@ def quadratic_plot(a, b, c):          # ②
 initial_plot = quadratic_plot(1, 0, 0)  # ③
 
 # Gradioインターフェースの定義
-demo = gr.Interface(                  # ③
+demo = gr.Interface(                  # ④
   fn=quadratic_plot,
-  inputs=[                            # ④
+  inputs=[                            # ⑤
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=1, label="係数 a"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 b"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
-  outputs=gr.Plot(value=initial_plot), # ⑤
-  live=True,                          # ⑥
+  outputs=gr.Plot(value=initial_plot), # ⑥
+  live=True,                          # ⑦
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
 )
 
-demo.launch()                         # ⑦
+demo.launch()
 ```
 
 プログラムを説明していきます。
@@ -456,13 +455,9 @@ demo.launch()                         # ⑦
 
 ③初期値としてa=1,b=0,c=0を渡し、最初に表示するグラフ（初期プロット）を生成します。
 
-Gradioインターフェースの設定は、BMIと入力の方法inputs(④)ほぼ同じですが、
-outputs(⑤)がグラフ描画のコンポーネントgr.Plotであるということが異なります。
-これはquadratic_plotの返り値であるmatplotlibのplotを受けとって表示することができるコンポーントです。
+④でGradioのgr.Interfaceを呼び出します。⑤のinputsはBMDと同様ですが、outputsでは
+matplotlibのplotを受けとって表示できるグラフ描画のコンポーネントgr.Plotl()を設定します(⑥)。
 
-TBD: live=True
-
-⑦では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。
 
 [図3●リスト3の実行例]
 
@@ -476,72 +471,72 @@ TBD: live=True
 
 まず、StreamlitとGradioに共通する準備を行います。
 
-#### 準備：ollamaのインストール
+#### 準備1：ollamaのインストールと動作確認
 
-Windos, Macによって異なりますが、それぞれ公式サイトの説明も参考にしてインストールしてみてください。Macの場合はHomebrewでインストールできます。
+Windos, Macによって異なりますが、公式サイト(https://ollama.com/)からダウンロードしてインストールします。説明も参考にしてインストールしてみてください。Macの場合はHomebrewでもインストールできます。
 
+ollamaでLLMモデルを以下のようにダウンロードして(①)、APIサーバを起動します(①)。以下ではgemma2を利用しています。
+
+```bash
+❯ ollama pull gemma2  # ①
+❯ ollama serve    # ②
+❯ curl http://localhost:11434/v1/models
 ```
-brew install ollama
-run gemma2:9b
-```
 
-Windowsの場合は
-TODO: [TBD]
-
-#### dotenvによる環境変数の設定
+#### 準備2：dotenvによる環境変数の設定
 
 ```
 OPENAI_API_KEY=dummy
 OPENAI_BASE_URL=http://localhost:11434/
 MODEL=gemma:7b
 ```
-#### 生成AIを呼び出す共通モジュール定義
+#### 準備3：生成AIを呼び出す共通モジュール定義
 
 ```python
 # chatai_util.py
-from typing import Generator  # ①
+from typing import Generator, List, Dict  # ①
 from openai import OpenAI  # ②
 from dotenv import load_dotenv  # ③
 import os
 
-load_dotenv()  # ⑤
+load_dotenv()  # ④
 
 client = OpenAI(
-    base_url=os.getenv("BASE_URL"),       # ⑥
-    api_key=os.getenv("OPENAI_API_KEY")   # ⑦
+  base_url=os.getenv("BASE_URL"),       # ⑤
+  api_key=os.getenv("OPENAI_API_KEY")   # ⑥
 )
 
 SYSTEM_PROMPT = {"role": "system",
                  "content": "あなたは親切なAIチャットボットです。\
-                 日本語で回答してください。"}  # ⑧
+                 日本語で回答してください。"}  # ⑦
 
-def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator[Any, None, None]:
-    response = client.chat.completions.create(
-        model=os.getenv("MODEL"),  # ⑩
-        messages=messages,
-        stream=True,               # ⑫
-    )
-    return response               # ⑬
+def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
+  response = client.chat.completions.create(
+    model=os.getenv("MODEL"),  # ⑧
+    messages=messages,
+    stream=True,               # ⑨
+  )
+  return response               # ⑩
 ```
 
 解説
 
-① ここからの説明で使用するために、Pythonの型ヒント用の型をいくつかインポートしておきます。
+①ここからの説明で使用するために、Pythonの型ヒント用の型をいくつかインポートしておきます。
 
 ②では、OpenAIが提供する生成AIのAPIを呼び出すためのライブラリ内のOpenAIクラスをインポートしています。
-ollamaやGeminiやClaudeなどはOpenAI互換のAPIを備えているものが多いので、これを経由してAPIを呼び出す
+ollamaやGeminiやClaudeなどのAPIはOpenAI互換のAPIを備えているものが多いので、これを経由してAPIを呼び出す
 ことで、切り替えが容易なプログラムとすることができます。
 
-③⑤.envファイルを読み込み、環境変数としてセットしてくれるdotenvライブラリをインポートしています。
+③④.envファイルを読み込み、環境変数としてセットしてくれるdotenvライブラリをインポートしています。
 .envは、一般にシークレット情報をソースコードとしてハードコーディングを避けるために使用するものです。
 このサンプルコードでは、接続先LLMを設定ファイル中の設定として切りかえることで異なる生成APIを
 切り替えて使用する目的でも使用します。
 
-⑥⑦ base_url, api_keyを環境変数から設定します。
+⑤⑥base_url, api_keyを環境変数から設定します。
 
-⑧チャットシステムで最初に与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleとして以下を使用します。
+⑦LLMに与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleキーと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleとして以下を使用します。
 
-|role||
+|role|説明|
 |-|-|
 |sytem|システムプロンプト|
 |user|ユーザからのメッセージ|
@@ -561,7 +556,7 @@ ollamaやGeminiやClaudeなどはOpenAI互換のAPIを備えているものが�
 #### StreamlitでチャットAIを作る
 
 ```bash
-pip install openai python-dotenv
+❯ pip install openai python-dotenv
 ```
 [リスト7●「.env」設定ファイル]
 
@@ -577,118 +572,115 @@ MODEL=gemma:7b
 ```python
 # st_chatai.py
 import streamlit as st
-from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ②
+from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ①
 
-if "message_history" not in st.session_state:  # ③
-    st.session_state.message_history = [SYSTEM_PROMPT]
+if "message_history" not in st.session_state:  # ②
+  st.session_state.message_history = [SYSTEM_PROMPT]
 
 st.title("チャットAI(Streamlit)")
 
-if user_input := st.chat_input("聞きたいことを入力してね！"):  # ⑤
-    # 入力文字列をチャット履歴に追加
-    st.session_state.message_history.append(  # ⑥
-        {"role": "user", "content": user_input}
-    )
-    # チャット会話を表示する
-    for message in st.session_state.message_history:  # ⑦
-        if message["role"] != "system":
-            with st.chat_message(message["role"]):  # ⑧
-                st.markdown(message["content"])  # ⑨
+if user_input := st.chat_input("聞きたいことを入力してね！"):  # ③
+  # 入力文字列をチャット履歴に追加
+  st.session_state.message_history.append(  # ④
+    {"role": "user", "content": user_input}
+  )
+  # チャット会話を表示する
+  for message in st.session_state.message_history:  # ⑤
+    if message["role"] != "system":
+      with st.chat_message(message["role"]):  # ⑥
+        st.markdown(message["content"])  # ⑦
 
-    with st.chat_message('ai'):  # ⑩
-        # AIの応答を逐次ストリーム取得
-        answer = st.write_stream(chat_completion_stream(  # ⑪
-            st.session_state.message_history
-        ))
-    # 回答文字列をチャット履歴に追加
-    st.session_state.message_history.append(  # ⑫
-        {"role": "assistant", "content": answer}
-    )
+  with st.chat_message('ai'):  # ⑧
+    # AIの応答を逐次ストリーム取得
+    answer = st.write_stream(chat_completion_stream(  # ⑨
+      st.session_state.message_history
+    ))
+  # 回答文字列をチャット履歴に追加
+  st.session_state.message_history.append(  # ⑩
+    {"role": "assistant", "content": answer}
+  )
 ```
 [図3●リスト3の実行例]
 
 <img src="img/st_chatai.png" width="480px" />
 
-②先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
+①先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
 
-③Streamlitのセッション状態を保持する変数st.session_stateに、チャット履歴の初期値を設定する。
+②Streamlitのセッション状態を保持する変数st.session_stateに、チャット履歴の初期値を設定する。
 「message_history」というキーがない場合、最初のアクセスまたは未定義状態と判断し、新たにメッセージ履歴（message_history）を
 システムプロンプトを設定するように初期化しています。OpenAI互換のモデルでは、
 LLMはシステムプロンプトを、roleが"system"であるメッセージの履歴として設定します。
 
-⑤st.chat_input()はチャット入力欄を含む、チャット画面のためのStreamlitのUIコンポーネントです。
+③st.chat_input()はチャット入力欄を含む、チャット画面のためのStreamlitのUIコンポーネントです。
 chat_input()は少し動作が特殊で、画面の下部にチャット入力欄が固定されるようなレイアウトになります。
 
-⑥入力された文字列をroleが"user"のメッセージとして、チャット履歴（message_history）の末尾に追加します。
+④入力された文字列をroleが"user"のメッセージとして、チャット履歴（message_history）の末尾に追加します。
 
-⑦現在までの対話履歴を、システムプロンプトを除いて表示していきます。
-⑧⑨st.chat_messageをwith句を使って呼び出すと、メッセージ中のroleに対応するアイコンを表示した上で、
+⑤現在までの対話履歴を、システムプロンプトを除いて表示していきます。
+
+⑥⑦st.chat_messageをwith句を使って呼び出すと、メッセージ中のroleに対応するアイコンを表示した上で、
 メッセージ中のcontentに対応するメッセージをst.writeなどで表示することができます。
 
-⑩最後に、LLMからの応答メッセージを表示します。st.write_stream()はOpenAI互換のストリーム
+⑨LLMからの応答メッセージを表示します。st.write_stream()はOpenAI互換のストリーム
 が返すジェネレータに対応いているので、chat_completion_stream()の返り値をそのまま渡すことができます。
 
-⑫AIからの応答メッセージをチャット履歴（message_history）の末尾に追加します。
+⑩AIからの応答メッセージをチャット履歴（message_history）の末尾に追加します。
 
 #### GradioでチャットAIを作る
 リスト8●「gr_chatai.py」。Gradioで作ったチャットAIのプログラム
 
 ```python
 # gr_chatai.py
-
 import gradio as gr
 from typing import Generator, List, Dict
-from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ③
+from chatai_util import chat_completion_stream, SYSTEM_PROMPT  # ①
 
-def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:  # ④
+# ②
+def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
   # ユーザからのメッセージ
-  user_message = {"role": "user", "content": message}  # ⑤
+  user_message = {"role": "user", "content": message}  # ③
   # 生成AIのレスポンスはチャンク列のジェネレータ
   response = chat_completion_stream([
     SYSTEM_PROMPT,
     *history,
     user_message
-  ])  # ⑥
-  ai_message = ""  # ⑦
+  ])  # ④
+  ai_message = ""  # ⑤
   # チャンク列のジェネレータに対してループをまわす
-  for item in response:  # ⑧
+  for item in response:  # ⑥
     chunk = item.choices[0].delta.content
     if chunk is not None:
       # チャンクJSONのdelta部分を変数ai_messageに累積追加する
-      ai_message += chunk
-  yield ai_message  # ⑨
+      ai_message += chunk # ⑦
+  yield ai_message  # ⑧
 
 demo = gr.ChatInterface(fn=chat_response, type="messages",
-                        title="チャットAI(Gradio)")  # ⑩
-demo.launch()  # ⑪
+                        title="チャットAI(Gradio)")  # ⑨
+demo.launch()
 ```
 
 [図3●リスト3の実行例]
 
 <img src="img/gr_chatai.png" width="480px" />
 
-③先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
+①先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
 
-④関数「chat_response()」は、Gradioが用意しているチャットコンポーネントgr.ChatInterfaceにラッピングさせる関数です。
+②関数「chat_response()」は、Gradioが用意しているチャットコンポーネントgr.ChatInterfaceにラッピングさせる関数です。
 gr.ChatInterfaceはチャット履歴を管理する機能を持っているので、Streamlit版とは異なり、チャット履歴を管理するコードを書く必要がありません。
 
-⑤では、LLMに送信するユーザメッセージ「user_message」を作成します。LLMはロールを意識するので、ここではロールとして"user"を設定します。
+③では、LLMに送信するユーザメッセージ「user_message」を作成します。ここではロールとして"user"を設定します。
 
-⑥SYSTEM_PROMPT、gr.ChatInterfaceかわ渡されたチャット履歴、ユーザメッセージを、
+④SYSTEM_PROMPT、gr.ChatInterfaceから渡されたチャット履歴とユーザメッセージを、
 生成AIアクセス用の共通モジュール「chatai_util.py」で定義したchat_completion_streamを使ってLLMに送信します。
 ストリーミング形式(streaming=True)で応答を取得するので、結果はGeneratorとなります。
 
-⑦AIからストリーミングで帰ってくるメッセージは断片なので、それを結合して保持するための変数を用意します。
-⑧chat_completion_streamから取得した1チャンクずつを、ai_messageに蓄積していきます。
-⑨で、1つの応答文字列が得られたら、それをyieldで返します。
+⑥AIからストリーミングで帰ってくるメッセージはチャンク化された断片なので、それを結合して保持するための変数を用意します。
+⑦chat_completion_streamから取得した1チャンクずつを、ai_messageに蓄積していきます。
+⑧で、1つの応答文字列が得られたら、それをyieldで返します。
 つまりこの関数chat_response全体は、LLMが返却する応答断片(JSON型式)のジェネレータを、回答単位の文字列のジェネレータに変換していることになります。
 
-⑩Gradioでの簡易チャットコンポーネントであるgr.ChatInterface()を準備します。fnにジェネレータを返す関数を与えることでStreamingに対応する
-表示(プログレッシブな回答の漸増的表示)を行うことができます。ここでtype="messages"はチャットのメッセージ形式で表示するように指定しています。
+⑨Gradioでの高レベルなチャットコンポーネントであるgr.ChatInterface()を準備します。fnにはジェネレータを返す関数chat_responseを与えることでStreamingに対応する表示(プログレッシブな回答の漸増的表示)を行うことができます。
+ここでtype="messages"はチャットのメッセージ形式で表示するように指定しています。
 タイトルも指定します。
-
-⑪ここでは、demo.launch()でGradioのWebインターフェイスを起動します。
-demo.launch()のデフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
-
 
 ## まとめ
