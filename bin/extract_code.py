@@ -1,4 +1,4 @@
-# env python3
+#!env python3
 #
 # python3 ../bin/extract_code.py mokujian.md && for i in *.py; do diff -c $i src/$i; done
 
@@ -14,16 +14,22 @@ def extract_python_blocks(md_file):
 
   matches = pattern.findall(content)
 
-  for code_block in matches:
-    lines = code_block.split('\n')
-
+  for match in matches:
+    lines = match.split('\n')
     if len(lines) < 2 or not lines[0].startswith('# '):
-      print("警告: コードブロックの最初の行に'# filename.py'の形式のコメントがありません。ファイル出力をスキップします。")
+      line_number = content[:content.find(match)].count('\n') + 1
+      context_lines = content.split('\n')[line_number - 2:line_number + 3]
+      context = '\n'.join([f"{md_file}:{i+1}: {line}" for i,
+                          line in enumerate(context_lines, start=line_number - 2)])
+      print(
+        f"\033[94m警告: コードブロックの最初の行に'# filename.py'の形式のコメントがありません。ファイル出力をスキップします。\033[0m")
+      print(f"\033[93m{context}\033[0m")
       continue
 
     filename = lines[0][2:].strip()
     if not filename.endswith('.py'):
-      print(f"警告: '{filename}' は有効なPythonファイル名ではありません。ファイル出力をスキップします。")
+      print(
+        f"\033[94m警告: '{filename}' は有効なPythonファイル名ではありません。ファイル出力をスキップします。\033[0m")
       continue
 
     code_to_write = '\n'.join(lines) + '\n'
