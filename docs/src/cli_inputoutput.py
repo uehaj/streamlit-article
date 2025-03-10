@@ -1,6 +1,6 @@
 # cli_inputoutput.py
-a = int(input("A="))
-b = int(input("B="))
+a = float(input("A = "))
+b = float(input("B = "))
 if b != 0:
   print("A/B = ", a / b)
 else:

@@ -93,6 +93,8 @@ else:
 
 これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
+[図4●リスト1の実行結果]
+
 <img src="img/st_inputoutput.png" width="480px" />
 
 このように、画面にUIコンポーネントを配置するための記述と、構築されたUIに基づいたプログラムの実行処理の記述が表裏一体になっていることがStreamlitの大きな特徴です。
@@ -106,11 +108,12 @@ Gradioはもともと機械学習モデルのインタラクティブなデモ�
 本稿でも汎用的なPython Webフレームワークとして見たときの機能やプログラミングについて解説します。
 
 それを前提として、Gradioを一言で説明するならば、「関数を対話的なアプリに変えるラッパー」だと考えることができます。
-たとえば、以下はGradioのコード例ですが(ここでは詳細を理解する必要はありません)、
-gr.Interface()というUIコンポーネントは、invert_colorsというロジックだけを含む関数をラッピングします。
+たとえば、以下はGradioのコード例ですが、「gr.Interface()」というGradioのUIコンポーネントで「invert_colors」という関数をラッピングしています。
+
+[リスト1●gr_invert.py。Gradioで画像反転を行うアプリケーション]
 
 ```python
-# invert_colors.py
+# gr_invert.py
 import gradio as gr
 import numpy as np
 
@@ -123,6 +126,10 @@ demo = gr.Interface(fn=invert_colors, # ラッピングしたい関数fn
                     outputs="image") # fnの返り値に対するUIコンポーネントの指定(gr.Image())
 demo.launch()
 ```
+
+[図4●リスト1の実行結果]
+
+<img src="image.png" width="800px"/>
 
 gr.Interface()に、UIを表示させたい関数をfn、「fnの入出力に対して
 どんなユーザインターフェースを与えるか」をそれぞれinputsとoutputsとして与えると、
