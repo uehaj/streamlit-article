@@ -1,7 +1,7 @@
 # 人気の二大Python Web UIフレームワークを使い分けよう
 ## Streamlit ＆ Gradio入門
 
-NTTテクノクロス上原潤二
+NTTテクノクロス株式会社 上原潤二
 
 ### はじめに
 
@@ -272,7 +272,7 @@ main()
 
 #### Streamlitで二次関数を描画するプログラム
 
-次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= a x^2 + bx + c」のグラフを描画するプログラムです。
+次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= ax^2 + bx + c」のグラフを描画するプログラムです。
 
 まず、準備として、グラフ表示のためにPythonのグラフ描画ライブラリであるmatplotlibをパッケージとしてインストールしておきます。
 
@@ -302,7 +302,7 @@ with col2:                       # ⑧
   y = a * x**2 + b * x + c        # ⑩
 
   fig, ax = plt.subplots()        # ⑪
-  ax.plot(x, y, label=f'y = a x^2 + bx + c\na={a}, b={b}, c={c}')
+  ax.plot(x, y, label=f'y = ax^2 + bx + c\na={a}, b={b}, c={c}')
   ax.axhline(0, color='black', linewidth=0.5)
   ax.axvline(0, color='black', linewidth=0.5)
   ax.grid(color='gray', linestyle='--', linewidth=0.5)
@@ -483,7 +483,7 @@ demo = gr.Interface(                  # ④
   outputs=gr.Plot(value=initial_plot), # ⑥
   live=True,
   title="二次関数グラフ表示アプリ",
-  description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
+  description="下のスライダーで係数a,b,cを調整するとy=ax^2+bx+cのグラフが自動更新されます。"
 )
 
 demo.launch()
@@ -494,7 +494,7 @@ demo.launch()
 ①は、初期表示のタイミングの問題でエラーにならないようにするための設定です。matplotlibの描画バックエンドとしてAggを使用するものです。
 
 ②の関数quadratic_plotの処理は、Streamlit版の「st_graph.py」の⑨以降の処理とほぼ同じなので説明は割愛します。
-関数の返り値として、MetaPlotlibのFigureを返します。
+関数の返り値として、MatPlotlibのFigureを返します。
 
 ③初期値としてa=1,b=0,c=0を渡し、最初に表示するグラフ（初期プロット）を生成します。
 
@@ -532,7 +532,7 @@ OPENAI_API_KEY=dummy
 OPENAI_BASE_URL=http://localhost:11434/
 MODEL=gemma:7b
 ```
-#### 準備3：生成AIを呼び出す共通モジュール定義
+#### 準備3：生成AIを使用するための共通モジュール定義
 
 ```python
 # chatai_util.py
@@ -580,9 +580,9 @@ ollamaやGeminiやClaudeなどのAPIはOpenAI互換のAPIを備えているも�
 
 |role|説明|
 |-|-|
-|sytem|システムプロンプト|
+|system|システムプロンプト|
 |user|ユーザからのメッセージ|
-|ai|AIアシスタントからの回答|
+|assistant|AIアシスタントからの回答|
 
 ⑨ chat_completion_stream()はメッセージをあらわす辞書のリスト（messages）を受け取り、ストリーミング応答をジェネレータとして返す関数です。
 
@@ -707,8 +707,8 @@ demo.launch()
 
 ①先ほど作成した生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。
 
-②関数「chat_response()」は、Gradioが用意しているチャットコンポーネントgr.ChatInterfaceにラッピングさせる関数です。
-gr.ChatInterfaceはチャット履歴を管理する機能を持っているので、Streamlit版とは異なり、チャット履歴を管理するコードを書く必要がありません。
+②ここで定義する関数chat_responseは、Gradioが用意している高レベルのチャットコンポーネントgr.ChatInterface()にラッピングさせる関数です。
+gr.ChatInterface()はチャット履歴を管理する機能を持っているので、Streamlit版とは異なり、チャット履歴を管理するコードを書く必要がありません。
 
 ③では、LLMに送信するユーザメッセージ「user_message」を作成します。ここではロールとして"user"を設定します。
 
@@ -726,3 +726,12 @@ gr.ChatInterfaceはチャット履歴を管理する機能を持っているの�
 タイトルも指定します。
 
 ## まとめ
+
+本稿では、人気のPython Web UIフレームワークである「Streamlit」と「Gradio」をご紹介しました。
+
+いずれも、Pythonコードだけでアプリを開発できるという大きな魅力を持っています。
+また、どちらも「Pythonコードの記述量が少なく、直感的に扱える」点が秀逸であり、
+高機能かつドキュメントが充実した成熟したライブラリとして成長を続けています。
+習熟すれば、ターゲットとなる比較的小規模のプロジェクトにおいて、迅速な開発に役立つ威力を発揮してくれるはずです。
+
+試しながら好みに合ったものを選択し、プロジェクトに合わせて使い分けていただければ幸いです。

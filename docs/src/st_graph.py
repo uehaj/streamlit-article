@@ -15,7 +15,7 @@ with col2:                       # ⑧
   y = a * x**2 + b * x + c        # ⑩
 
   fig, ax = plt.subplots()        # ⑪
-  ax.plot(x, y, label=f'y = a x^2 + bx + c\na={a}, b={b}, c={c}')
+  ax.plot(x, y, label=f'y = ax^2 + bx + c\na={a}, b={b}, c={c}')
   ax.axhline(0, color='black', linewidth=0.5)
   ax.axvline(0, color='black', linewidth=0.5)
   ax.grid(color='gray', linestyle='--', linewidth=0.5)
