@@ -95,7 +95,7 @@ else:
 
 [図4●リスト1の実行結果]
 
-<img src="img/st_inputoutput.png" width="480px" />
+<img style="border: 1px solid" src="img/st_inputoutput.png" width="480px" />
 
 このように、画面にUIコンポーネントを配置するための記述と、構築されたUIに基づいたプログラムの実行処理の記述が表裏一体になっていることがStreamlitの大きな特徴です。
 このことは後述します。
@@ -129,7 +129,7 @@ demo.launch()
 
 [図4●リスト1の実行結果]
 
-<img src="image.png" width="800px"/>
+<img style="border: 1px solid" src="image.png" width="800px"/>
 
 
 データとして画像を反転させる関数invert_colorsを作成し、
@@ -176,19 +176,19 @@ st.write("Hello, world!")
 
 [図4●リスト1の実行結果]
 
-<img src="img/st_hello.png" width="480px" alt="リスト1の実行結果">
+<img style="border: 1px solid" src="img/st_hello.png" width="480px" alt="リスト1の実行結果">
 
 ここで、プログラムを実行したままバックグラウンドでPythonコードを変更・保存することで、再起動無しでプログラムを置き換える、いわゆるホットリローディングを行うことができます。たとえばst_hello.pyの「st.write("Hello world!")」を「st.markdown("こんにちは\*\*世界!\*\*")」にエディタで書き換えて保存すると、Streamlitのランタイムはコードの変更を検知して、ブラウザの画面上部に以下が表示されます。
 
 [図4●リスト1の再実行時の画面上部]
 
-<img src="img/st_hello2.png" width="480px" style="border: solid 1px" />
+<img style="border: 1px solid" src="img/st_hello2.png" width="480px" style="border: solid 1px" />
 
 ここで「Rerun」をクリックすると一回だけの再実行ができます。「Always rerun」をクリックすると変更されるたびに再実行が行なわれるようになります。
 
 [図4●リスト1の再実行結果]
 
-<img src="img/st_hello3.png" width="480px" style="border: solid 1px" />
+<img style="border: 1px solid" src="img/st_hello3.png" width="480px" style="border: solid 1px" />
 
 #### StreamlitでのBMI計算機のプログラム
 
@@ -233,7 +233,7 @@ if height:
 
 [図4●リスト4の実行結果]
 
-<img src="img/st_bmi_.png" width="480px" />
+<img style="border: 1px solid" src="img/st_bmi_.png" width="480px" />
 
 このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。
 ちなみに、ここで仮にif文でネストさせずに、以下のようにフラットに入力欄を並べて書いていたとしたら、
@@ -316,7 +316,7 @@ with col2:                       # ⑧
 
 [図3●リスト3の実行例]
 
-<img src="img/st_graph.png" width="480px" />
+<img style="border: 1px solid" src="img/st_graph.png" width="480px" />
 
 このプログラムを説明していきます。
 
@@ -369,7 +369,7 @@ demo.launch() # ④
 
 [図3●リスト3の実行例]
 
-<img src="img/gr_hello.png#?!" width="480px" />
+<img style="border: 1px solid" src="img/gr_hello.png#?!" width="480px" />
 
 以下、解説していきます。
 
@@ -409,7 +409,7 @@ demo.launch()            # ⑨
 
 [図3●リスト3の実行例]
 
-<img src="img/gr_bmi.png" width="480px" />
+<img style="border: 1px solid" src="img/gr_bmi.png" width="480px" />
 
 プログラムを説明していきます。
 
@@ -493,7 +493,7 @@ MatplotlibのFigureを受けとって表示できるグラフ描画のコンポ�
 
 [図3●リスト3の実行例]
 
-<img src="img/gr_graph.png" width="480px" />
+<img style="border: 1px solid" src="img/gr_graph.png" width="480px" />
 
 ### チャットAIを作ってみよう
 
@@ -644,7 +644,7 @@ if user_input := st.chat_input("聞きたいことを入力してね！"):  # �
 
 [図3●リスト3の実行例]
 
-<img src="img/st_chatai.png?" width="480px" />
+<img style="border: 1px solid" src="img/st_chatai.png?" width="480px" />
 
 まずは、Streamlit版について解説していきましょう。
 
@@ -705,7 +705,7 @@ demo.launch()
 
 [図3●リスト3の実行例]
 
-<img src="img/gr_chatai.png" width="480px" />
+<img style="border: 1px solid" src="img/gr_chatai.png" width="480px" />
 
 次に、Gradio版のコードについて解説していきます。
 
@@ -734,7 +734,7 @@ gr.ChatInterface()はチャット履歴を管理する機能を持っている�
 この両者のいずれで実装したとき、いずれもコード量としては非常に少なく、
 チャットを実現するための非常に高機能なライブラリがあるということが共通しています。
 
-あえて違いを言えば、Streamlitのチャット機能はチャット履歴管理が含まれず、ユーザが管理を実装しなければならない分コードがやや増えています。もっとも、Gradioはここで使用した高レベルな「gr.ChatInterface()」以外に低レベルな「gr.ChatBot()」コンポーネントがあり、それを使った場合はチャット履歴管理も行なわねばならずコード量は増えるでしょう。
+あえて違いを言えば、Streamlitのチャット機能はチャット履歴管理が含まれず、ユーザが管理を実装しなければならない分コードがやや増えています。もっとも、Gradioはここで使用した高レベルな「gr.ChatInterface()」以外に低レベルな「gr.Chatbot()」コンポーネントがあり、それを使った場合はチャット履歴管理も行なわねばならずコード量は増えるでしょう。
 
 また、Streamlitの「st.write_stream()」コンポーネントはOpenAIのストリーミング呼び出しが返すジェネレータをそのまま受けつけチャンク中の要素の取り出しもまかせることができるため、その分Gradioよりもコード量が減っています。
 
@@ -742,7 +742,7 @@ gr.ChatInterface()はチャット履歴を管理する機能を持っている�
 そのイベントハンドリングと画面更新についての考えかたと、その違いに基づく記述方法の違いです
 (コラム: ユニークなStreamlitのイベントハンドリングと画面更新)。Streamlitのユニークな点を正しく認識・理解して、それを良しとするかどうかは、StreamlitとGradioのどちらを選ぶかの大きな分水嶺の一つになるでしょう。
 
-また、機能やUIコンポーネントの充実度は、いずれも活発に進んでいるので比較ができるわけではありませんが、可用性含めてGradioだけが持つ秀逸な機能も散見されます。たとえば、PWAとしてのインストールや、ブラウザ内でWASM化したPythonを実行して静的なデプロイができることや、API化できることや、Widgetとして貼り込めることなどです。現時点で差のある機能がプロジェクトにおいて必要かどうかが、選択理由になることもありそうです。
+また、機能やUIコンポーネントの充実度は、相互に影響を受けて活発に進んでいるので一般的に言えるわけではありませんが、プロジェクトにおいて使いたい機能がそれぞれのライブラリで実装されているかどうかが、選択理由になることもありそうです。
 
 <div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%l; background: lightblue">
 
