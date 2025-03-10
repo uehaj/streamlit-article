@@ -10,7 +10,8 @@ demo = gr.Interface(      # ②
     gr.Number(label="身長 (cm)"),  # ⑤
     gr.Number(label="体重 (kg)")   # ⑥
   ],
-  outputs=gr.Number(label="BMI")  # ⑦
+  outputs=gr.Number(label="BMI"), # ⑦
+  live=True              # ⑧
 )
 
-demo.launch()            # ⑧
+demo.launch()            # ⑨

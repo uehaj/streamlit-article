@@ -1,11 +1,12 @@
+# gr_invert.py
 import gradio as gr
 import numpy as np
 
+# 色を反転させる関数
 def invert_colors(img: np.ndarray) -> np.ndarray:
-    print(type(img))
     return 255 - img
 
-gr.Interface(fn=invert_colors,
-             inputs="image",
-             outputs="image").launch()
-
+demo = gr.Interface(fn=invert_colors, # ラッピングしたい関数fn
+                    inputs="image", # fnの引数に対するUIコンポーネントの指定(gr.Image())
+                    outputs="image") # fnの返り値に対するUIコンポーネントの指定(gr.Image())
+demo.launch()

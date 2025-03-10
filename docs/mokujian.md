@@ -131,15 +131,15 @@ demo.launch()
 
 <img src="image.png" width="800px"/>
 
-gr.Interface()に、UIを表示させたい関数をfn、「fnの入出力に対して
-どんなユーザインターフェースを与えるか」をそれぞれinputsとoutputsとして与えると、
-イメージをアップロードして反転処理をすることができる、
-見栄えのよいUIが作りだされてます。
+
+データとして画像を反転させる関数invert_colorsを作成し、
+それをgr.Interface()にラッピングすることで、任意の画像ファイルをアップロードして反転処理をすることができる、
+見栄えのよいWebアプリケーションを作成できます。
 
 
 ### Streamlit入門
 
-ではここからはそれぞれのフレームワークの利用方法とプログラミングについてそれぞれ簡単に一巡りしていきたいと思います。まずはStreamlitからです。
+ではここからはそれぞれのフレームワークの利用方法とプログラミング方法について、簡単に一巡りしていきます。まずはStreamlitからです。
 
 #### Streamlitのインストール
 
@@ -166,7 +166,7 @@ import streamlit as st # ①
 st.write("Hello, world!")
 ```
 
-まず、①ではStreamlitライブラリをインポートし、stという短縮名で利用できるようにします。次に、②ではWebブラウザに文字列を表示するためにwriteコンポーネントを呼び出します。このコードを作成し保存し、以下のコマンドでWebアプリを起動できます。
+まず、①ではStreamlitライブラリをインポートし「st」という短縮名で利用できるようにします。次に、②ではWebブラウザに文字列を表示するために[st.write()」コンポーネントを呼び出します。このコードを保存し、以下のコマンドでWebアプリを起動できます。
 
 ```bash
 > streamlit run st_hello.py
@@ -178,7 +178,7 @@ st.write("Hello, world!")
 
 <img src="img/st_hello.png" width="480px" alt="リスト1の実行結果">
 
-ここで、プログラムを実行したままバックグラウンドでPythonコードを変更することで、再起動無しでプログラムを置き換えることができる、いわゆるホットリローディングを行うことができます。たとえばst_hello.pyの「st.write("Hello world!")」を「st.write("こんにちは世界")」にエディタで書き換えて保存すると、ブラウザの画面上部に以下が表示されます。
+ここで、プログラムを実行したままバックグラウンドでPythonコードを変更・保存することで、再起動無しでプログラムを置き換える、いわゆるホットリローディングを行うことができます。たとえばst_hello.pyの「st.write("Hello world!")」を「st.markdown("こんにちは\*\*世界!\*\*")」にエディタで書き換えて保存すると、Streamlitのランタイムはコードの変更を検知して、ブラウザの画面上部に以下が表示されます。
 
 [図4●リスト1の再実行時の画面上部]
 
@@ -190,17 +190,15 @@ st.write("Hello, world!")
 
 <img src="img/st_hello3.png" width="480px" style="border: solid 1px" />
 
-★★★TODO: 画像を差し変える
-
 #### StreamlitでのBMI計算機のプログラム
 
 次の題材として、BMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)
 を計算するプログラムをStreamlitで作成してみます。
 
-[リスト2●「st_bmi1.py」。Streamlitで作ったBMI計算機のプログラム]
+[リスト2●「st_bmi.py」。Streamlitで作ったBMI計算機のプログラム]
 
 ```python
-# st_bmi1.py
+# st_bmi.py
 import streamlit as st
 
 def bmi(height, weight):  # ①
@@ -218,8 +216,8 @@ if height := st.number_input("身長(cm)"):  # ③
 プログラムを説明していきましょう。まず、①ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。
 
 ③④では身長と体重の入力欄を表示し、入力された値をそれぞれheight、weightの変数に保存します。
-「:=」は、Python 3.8で導入された演算子で、代入と同時にその値を返す演算子です。
-この演算子を使わないで書くとしたら③のif文は、
+なお、ここで使用されている「:=」は、Python 3.8で導入された「代入と同時にその値を返す演算子」です。
+この演算子を使わない場合、③のif文は、
 
 ```python
 height = st.number_input("身長(cm)"):
@@ -227,27 +225,29 @@ if height:
   :
 ```
 
-と書くのと同じです。入力が空(None)であればif文の本体は実行されず、
+とも書けますが、コードがやや冗長になります。
+
+この一連のif文は、入力が空(None)であればif文本体は実行されないので、
 身長が入力されると体重の入力欄が表示され、体重の入力をすると結果が表示される、
-という逐次動作を実現しています。(図4●リスト4の実行結果)
-
-ここで仮にif文でネストさせずに、以下のようにフラットに入力欄を
-並べて書くと,身長(heght)欄と体重(weight)の入力欄は同時に表示されます。
-
-```python
-height = st.number_input("身長(cm)"):
-weight = st.number_input("体重(kg)"):
-```
+という逐次動作を実現しています。(図4●リスト4の実行結果参照)
 
 [図4●リスト4の実行結果]
 
 <img src="img/st_bmi_.png" width="480px" />
 
 このように、入力が進行するにつれその処理結果結果や次の入力欄が次々に下に追記されていくような処理を簡単に書けることがStreamlitの特徴の一つです。このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。
+ちなみに、ここで仮にif文でネストさせずに、以下のようにフラットに入力欄を並べて書いていたとしたら、
+身長(heght)欄と体重(weight)の入力欄は同時に表示されます。
+
+```python
+height = st.number_input("身長(cm)"):
+weight = st.number_input("体重(kg)"):
+```
 
 ⑤では、入力された身長と体重が0より大きいことをチェックしています。0以下である場合はエラーメッセージを表示し、そうでなければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。
 
 <div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
+
 ##### カラム: if文のネストを避ける方法
 
 if文のネストを使うことで、処理結果を次々と表示してくような処理がStreamlitでは書きやすいことを示しました。しかし処理が何段階にも連なっていくとif文のネストが深くなってしまいます。
@@ -272,9 +272,9 @@ main()
 
 #### Streamlitで二次関数を描画するプログラム
 
-次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= a^2 + bx + c」のグラフを描画するプログラムです。
+次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= a x^2 + bx + c」のグラフを描画するプログラムです。
 
-まず、準備として、グラフ表示のためにPythonの描画matplotlibをパッケージとしてインストールしておきます。
+まず、準備として、グラフ表示のためにPythonのグラフ描画ライブラリであるmatplotlibをパッケージとしてインストールしておきます。
 
 ```bash
 ❯ pip install matplotlib
@@ -286,7 +286,6 @@ main()
 
 ```python
 # st_graph.py
-
 import streamlit as st
 import numpy as np               # ①
 import matplotlib.pyplot as plt  # ②
@@ -312,8 +311,8 @@ with col2:                       # ⑧
   st.pyplot(fig)                 # ⑫
 ```
 
-このプログラムの実行の様子を図3に示します。左側に係数入力フォームが表示され、入力された
-係数に応じて右側に2次関数のグラフが表示されます。
+このプログラムの実行の様子を図3に示します。左側に係数の入力欄が表示され、
+右側に入力された係数に応じた2次関数のグラフが表示されます。
 
 [図3●リスト3の実行例]
 
@@ -324,17 +323,17 @@ with col2:                       # ⑧
 ①②では、グラフの描画に必要なNumPyとMatplotlibの必要なモジュールをインポートします。
 
 次にプログラムのタイトルとして「2次関数のグラフ描画」を表示します。
-③④⑧では「st.columns(2)」をつかって画面を左右の2つのカラムに分割します。
+③④⑧ではStreamlitのUIコンポーネント「st.columns(2)」をつかって画面を左右の2つのカラムに分割します。
 col1には左側、col2には左側のカラムをわりあて、with句をつかってそれぞれのブロックの内側に部品を配置していきます。
 
 ⑤⑥⑦では左側のカラムに係数a,b,cの入力欄を配置します。入力結果は変数a,b,cに格納されます。
 
-⑨からは右側のカラムにグラフ表示コンポーネントを配置します。まず、⑨ではx軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
-⑫では、y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax+by+c」を計算します。
+⑨以降では右側のカラムにグラフ表示コンポーネントを配置しています。まず、⑨ではx軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
+⑫では、y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax^2 + bx + c」の結果の系列データを計算します。
 
 ⑪以降、matplotlibを使用して、2次関数のグラフを描画し、軸やグリッドや凡例も追加したグラフを作成します。
 
-⑲では、作成したグラフをStreamlit上に配置します。
+⑫では、作成したグラフをStreamlit上に配置します。
 
 
 <font color="blue">
@@ -348,8 +347,7 @@ Streamlitは画面が最更新される。一見効率がわるいが、Reactで
 
 ### Gradio入門
 
-ここからはGradioの入門編ということでGradioのインストール・実行方法、
-プグラミングについて簡単に解説していきます。
+ここからはGradioの入門編ということでGradioのインストールと実行方法、プログラミングについて簡単に解説していきます。
 
 #### Gradioのインストール
 
@@ -378,18 +376,22 @@ with gr.Blocks() as demo:   # ②
 
 demo.launch() # ④
 ```
+
 [図3●リスト3の実行例]
+
 <img src="img/gr_hello.png#?!" width="480px" />
 
 以下、解説していきます。
 
 ①ではGradioライブラリをインポートし、短縮名としてgrを割りあてています。
 
-②ではレイアウトのためのコンポーネントであるgr.Blocks()を作成し、その内側にコンポーネントを配置する準備をしています。with句を使うとコンテキストが作成され、その内側でのgr.Markdownなどのコンポーネントの呼び出しはそのブロック内に配置されるようになります。作成したkonoブロックをas demoでasという変数に格納しています。
+②ではレイアウトのためのUIコンポーネントであるgr.Blocks()を作成し、その内側にコンポーネントを配置する準備をしています。with句を使うとコンテキストが作成され、その内側でのgr.Markdownなどのコンポーネントの呼び出しはそのブロック内に配置されるようになります。作成したkonoブロックをas demoでasという変数に格納しています。
 
-④では、demoに格納されたBocksコンポーネントに対してlaunch()メソッドを呼び出し、Webアプリケーションとして起動します。Streamlitではこのような起動をしなくてもWebアプリとして実行できたのですが、Gradioではlaunchの呼び出しが必要です。
+④では、demoに格納されたBocksコンポーネントに対してlaunch()メソッドを呼び出し、Webアプリケーションとして起動します。StreamlitではStreamlitアプリとしての起動はコマンドラインから`streamlit run`で行いますが、Gradioではlaunch()の明示的な呼び出しでWebアプリが起動するので、gradioコマンドからだけではなく、pythonコマンドで実行することもできます。ただしその場合はホットリロードを利用できlません。
 
 #### GradioでのBMI計算機のプログラム
+
+GradioでBMIを計算するプログラムを作成したものがリスト5になります。
 
 [リスト5●「gr_bmi.py」。Gradioで作ったBMI計算機のプログラム]
 
@@ -406,30 +408,39 @@ demo = gr.Interface(      # ②
     gr.Number(label="身長 (cm)"),  # ⑤
     gr.Number(label="体重 (kg)")   # ⑥
   ],
-  outputs=gr.Number(label="BMI")  # ⑦
+  outputs=gr.Number(label="BMI"), # ⑦
+  live=True              # ⑧
 )
 
-demo.launch()            # ⑧
+demo.launch()            # ⑨
 ```
+
+実行例は図3になります。
+
+[図3●リスト3の実行例]
+
+<img src="img/gr_bmi.png" width="480px" />
 
 プログラムを説明していきます。
 
 ①はBMIを計算する関数bmiの定義です。Streamlit版と全く同じものです。
 
-②は関数の高レベルの汎用GUIラッパーであるgr.Interfaceを呼び出し、demoに保存します。
-gr.Interfaceはラッピングする対象の関数fn(③)、
+②では関数の高レベルの汎用UIラッパーである「gr.Interface()」を呼び出し、demoに保存します。
+gr.Interface()にはラッピングする対象の関数fn(③)、
 関数fnへの入力の型式や方法を規定するinputs(④)、
 関数fnの返り値を規定するoutputs(⑦)などを引数として与えます。
 
-⑤⑥は、fnの入力として、身長と体重の数値を入力するためのコンポーネントgr.Numberを与えます。
+⑤⑥では、fnに引数を与える入力方法として、身長と体重の数値を入力するためのコンポーネントgr.Number()を指定します。
+⑦では、fnの結果の表示方法として、同じくコンポーネントgr.Number()を指定します。
 
-⑧では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。デフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
+⑧でlive=Trueに設定すると、計算結果は入力が変化したときにリアルタイムで結果が表示されます。
+live=FalseのときはSubmitボタンを押したときに処理結果が反映されます。デフォルトはlive=Falseです。
 
-
-[図3●リスト3の実行例]
-<img src="img/gr_bmi.png" width="480px" />
+⑨では、demo.launch()によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。デフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザからアクセスできるようになります。
 
 #### Gradioで二次関数のグラフを描画するプログラム
+
+続いて、Gradioでも二次関数を表示するプログラムを作成していきます。
 
 [リスト6●「gr_graph.py」。Gradioで作った2次関数のグラフを描画するプログラム]
 
@@ -439,10 +450,11 @@ import gradio as gr
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 matplotlib.use('Agg')                 # ①
 
-def quadratic_plot(a, b, c):          # ②
+def quadratic_plot(a, b, c) -> Figure:  # ②
   x = np.linspace(-10, 10, 400)
   y = a * x**2 + b * x + c
 
@@ -469,7 +481,7 @@ demo = gr.Interface(                  # ④
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
   outputs=gr.Plot(value=initial_plot), # ⑥
-  live=True,                          # ⑦
+  live=True,
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
 )
@@ -481,13 +493,13 @@ demo.launch()
 
 ①は、初期表示のタイミングの問題でエラーにならないようにするための設定です。matplotlibの描画バックエンドとしてAggを使用するものです。
 
-②はStreamlit版の「st_graph.py」の⑨以降の処理とほぼ同じなので説明は割愛します。
+②の関数quadratic_plotの処理は、Streamlit版の「st_graph.py」の⑨以降の処理とほぼ同じなので説明は割愛します。
+関数の返り値として、MetaPlotlibのFigureを返します。
 
 ③初期値としてa=1,b=0,c=0を渡し、最初に表示するグラフ（初期プロット）を生成します。
 
-④でGradioのgr.Interfaceを呼び出します。⑤のinputsはBMDと同様ですが、outputsでは
-matplotlibのplotを受けとって表示できるグラフ描画のコンポーネントgr.Plotl()を設定します(⑥)。
-
+④でGradioのgr.Interfaceを呼び出します。⑤のinputsはBMIで指定した形と同様ですが、outputsでは
+MatplotlibのFigureを受けとって表示できるグラフ描画のコンポーネントgr.Plotl()を設定します(⑥)。
 
 [図3●リスト3の実行例]
 
