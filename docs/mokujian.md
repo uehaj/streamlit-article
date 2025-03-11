@@ -53,8 +53,8 @@ StreamlitとGradioの両者にはPython Web UIフレームワークとして重�
 
 ```python
 # cli_inputoutput.py
-a = int(input("A=")) # ①
-b = int(input("B=")) # ②
+a = float(input("A="))  # ①
+b = float(input("B="))  # ②
 if b != 0:
   print("A/B = ", a / b)  # ③
 else:
@@ -724,7 +724,7 @@ gr.ChatInterface()はチャット履歴を管理する機能を持っている�
 ストリーミング形式(streaming=True)で応答を取得するので、結果はGeneratorとなります。
 
 ⑥AIからストリーミングで帰ってくるメッセージはチャンク化された断片なので、それを結合して保持するための変数を用意します。
-⑦chat_completion_streamから取得した1チャンクずつを、ai_messageに蓄積していきます。
+⑦chat_completion_streamから取得した1チャンクずつを、ai_messageに追加していきます。
 ⑧で、1つの応答文字列が得られたら、それをyieldで返します。
 つまりこの関数chat_response全体は、LLMが返却する応答断片(JSON型式)のジェネレータを、回答単位の文字列のジェネレータに変換していることになります。
 
