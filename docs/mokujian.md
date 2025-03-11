@@ -45,7 +45,7 @@ Python Web UIフレームワークとは何でしょうか？有名なDjangoやF
 
 StreamlitとGradioの両者にはPython Web UIフレームワークとして重なるところも大きいのですが、重要な違いをいくつか示しておきます。
 
-#### Streamlitは入力や出力指示の実行の過程が画面配置を決める
+#### Streamlitは実行の過程が画面配置を決める
 
 コンソールで実行するPythonのコマンドラインプログラムとして以下を考えてみてください。
 
@@ -79,17 +79,18 @@ else:
 
 コンソール版のものと記述の流れほぼと対応していることがわかります。
 
-<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%">
-  <ul style="list-style: none; padding: 0; margin: 0;">
-    <li style="margin-bottom: 5px; padding-left: 1.5em; text-indent: -1.5em;"><span style="margin-right: 5px;">⚠</span>
-    ただし、コンソール版とStreamlit版の実行時の動作の違いとしては、
-    コンソール版のinput()は利用者が文字列を入力しエンターキーが押されるまでブロックするのに対して、StreamlitのUIコンポーネント(ここでは「st.number_input()」)は呼び出したときにブロックしません。
-    つまりリスト1の①でaの値が入力されるまで待つわけではないので、
-    ②のbの入力欄は最初から表示されます。
-    このことはStreamlitプログラミングを理解するための一つのポイントとなります。
-    </li>
-  </ul>
+<div style="border: 1px solid #ccc; border-radius: 1rem; margin: 1rem; padding: 0rem 1rem 1rem 1rem; width: 90%; background: lightyellow;">
+
+## ⚠
+
+ただし、コンソール版とStreamlit版の実行時の動作の違いとしては、
+コンソール版のinput()は利用者が文字列を入力しエンターキーが押されるまでブロックするのに対して、StreamlitのUIコンポーネント(ここでは「st.number_input()」)は **呼び出したときにブロックしません**。
+つまりリスト1の①でaの値が入力されるまで待つわけではないので、
+②のbの入力欄は最初から表示されます。
+このことはStreamlitプログラミングを理解するための一つのポイントとなります。
+
 </div>
+
 
 これを`streamlit run st_inputoutput.py`として実行し、ブラウザでlocalhostの8085ポートを開くことで以下のようにWebアプリケーションとして実行することができます。
 
@@ -109,8 +110,10 @@ Gradioはもともと機械学習モデルのインタラクティブなデモ�
 たとえば、以下はGradioのコード例ですが(ここでは詳細を理解する必要はありません)、
 gr.Interface()というUIコンポーネントは、invert_colorsというロジックだけを含む関数をラッピングします。
 
+[リスト1●gr_invert.py。画像を反転させる]
+
 ```python
-# invert_colors.py
+# gr_invert.py
 import gradio as gr
 import numpy as np
 
