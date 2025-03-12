@@ -8,9 +8,9 @@ NTTテクノクロス株式会社 上原潤二
 最近、Python界隈では、美しくインタラクティブなWebアプリケーションを簡単に作成できる「Python Web UIフレームワーク」が人気を集めています。
 その中でも特に注目されているのが、「Streamlit（ストリームリット）」と「Gradio（グレディオ）」の二つです。
 
-これらは、HTMLやJavaScript、CSSといったWebフロントエンド技術を直接使用しなくてもPythonだけでWebアプリケーションを開発できます。またこのことによって学習コストを低減し、結果的にロジックの本質部分に集中することができます。この特徴により、従来よりも短時間で、見通しの良いコードを開発することができるのです。
+これらのフレームワークを使えば、HTMLやJavaScript、CSSなどのWebフロントエンド技術を直接扱わずに、PythonのみでWebアプリを開発できます。そのため、学習コストを抑えつつ、ロジックの本質部分に集中できます。この特徴により、従来よりも短時間で、見通しの良いコードを開発することができるのです。
 
-ただし、それぞれの固有のコンセプトを持ち、方向性が異なるため、開発しようとするアプリケーションの特性を踏まえて、適したフレームワークを理解して選ぶことが重要です。本稿では、両者の特徴と基本的な使い方を比較しながら解説していきます。
+ただし、それぞれ異なるコンセプトを持つため、開発するアプリの特性に応じて適切なフレームワークを選ぶことが重要です。本稿では、両者の特徴と基本的な使い方を比較しながら解説していきます。
 
 ### Python Web UIフレームワークとは
 
@@ -22,9 +22,9 @@ Python Web UIフレームワークとは何でしょうか？有名なDjangoやF
  - ブラウザとサーバー間の通信処理（HTTP）も隠蔽されており、たとえばPOSTやGETなどのHTTPリクエストを意識する必要がない。
  - データベースアクセスなどのバックエンド機能は含まれず、UI開発のみに特化している。
 
-以上により、見た目が良く、操作しやすいWebアプリケーションを比較的短期間で開発できます。一方で、画面作成上の自由度や表現力は限られ、表示速度や反応速度は、従来のチューニングされたWebアプリケーションに比べて劣ることが多いでしょう。
+以上により、見栄えの良い操作しやすいWebアプリケーションを比較的短期間で開発できます。一方で、画面作成上の自由度や表現力は限られ、表示速度や反応速度は、従来のチューニングされたWebアプリケーションに比べて劣ることが多いでしょう。
 
-そのため、Python Web UIフレームワークは、不特定多数が利用するアプリではなく、インハウスでの利用、たとえばツール開発、ダッシュボード、データサイエンスや生成AIアプリなど比較的負荷が低い用途のアプリ開発に適しています。またPoC(原理実証)やMVP(顧客のニーズを満たす最小限のプロダクト)の開発や、比較的小規模の開発に向いていると言えるでしょう。
+このため、高いパフォーマンスが求められる大規模なWebアプリよりも、社内ツールやダッシュボード、データ可視化アプリなど、比較的負荷の低い用途に適しています。またPoC(原理実証)やMVP(顧客のニーズを満たす最小限のプロダクト)の開発や、比較的小規模の開発に向いていると言えるでしょう。
 
 ### StreamlitとGradioとFlaskの比較
 
@@ -40,7 +40,7 @@ Python Web UIフレームワークとは何でしょうか？有名なDjangoやF
 | **組み込みUIコンポーネント** | 多数の標準UIあり | 多数の標準UIあり | なし（Flask単体ではUIを提供しない） |
 | **学習コスト** | 低い（PythonのみでOK） | 低い（PythonのみでOK） | 高い（フロントエンド技術が必要） |
 | **カスタマイズの自由度** | 低 | 低 | 高 |
-| **スケーラビリティ** | 低（小規模向け） | 低（小規模向け） | 高（規模によらない） |
+| **スケーラビリティ** | 〜中規模向け | 〜中規模向け | 高（規模によらない） |
 
 StreamlitとGradioの両者にはPython Web UIフレームワークとして重なるところも大きいのですが、重要な違いをいくつか示しておきます。
 
@@ -60,7 +60,7 @@ else:
   print("error")
 ```
 
-このコードは「python3 divide_console.py」でコンソールから実行できます(図1)。
+このコードは「python cli_inputoutput.py」でコンソールから実行できます(図1)。
 
 [図1●リスト1の実行例]
 
@@ -125,8 +125,8 @@ def invert_colors(img: np.ndarray) -> np.ndarray:
     return 255 - img
 
 demo = gr.Interface(fn=invert_colors, # ラッピングしたい関数fn
-                    inputs="image", # fnの引数に対するUIコンポーネントの指定(gr.Image())
-                    outputs="image") # fnの返り値に対するUIコンポーネントの指定(gr.Image())
+                    inputs=gr.Image(), # fnの引数に対するUIコンポーネント指定
+                    outputs=gr.Image()) # fnの返り値に対するUIコンポーネント指定
 demo.launch()
 ```
 
@@ -151,8 +151,10 @@ Pythonがインストールされていることを前提として、Streamlit�
 ```bash
 > mkdir streamlit-sample
 > cd streamlit-sample
-> python3 -m venv venv
+> python -m venv venv
 > source ./venv/bin/activate
+  # Windows(CMD)では venv\Scripts\activate
+  # Windows(PowerSHell)では .\venv\Scripts\Activate.ps1
 > pip install streamlit
 ```
 
@@ -166,7 +168,7 @@ Pythonがインストールされていることを前提として、Streamlit�
 # st_hello.py
 import streamlit as st # ①
 
-st.write("Hello, world!")
+st.write("Hello, world!") # ②
 ```
 
 リスト4を解説すると、①ではStreamlitライブラリをインポートし「st」という短縮名で利用できるようにします。
@@ -182,7 +184,7 @@ st.write("Hello, world!")
 
 <img style="border: 1px solid" src="img/st_hello.png" width="480px" >
 
-ここで、プログラムを実行したままバックグラウンドでPythonコードを変更・保存することで、再起動無しでプログラムを置き換える、いわゆるホットリローディングを行うことができます。たとえば「st_hello.py」の「st.write("Hello world!")」を「st.markdown("こんにちは\*\*世界!\*\*")」にエディタで書き換えて保存すると、
+ここで、プログラムを実行したままバックグラウンドでPythonコードを変更・保存することで、再起動無しでプログラムを置き換える、いわゆるホットリロードを行うことができます。たとえば「st_hello.py」の「st.write("Hello world!")」を「st.markdown("こんにちは\*\*世界!\*\*")」にエディタで書き換えて保存すると、
 StreamlitのランタイムはPythonコードのファイル更新を検知して、ブラウザの画面上部に以下を表示します。
 
 [図4-2●リスト4の再実行時の画面上部]
@@ -357,8 +359,10 @@ Pythonがインストールされていることを前提として、Gradioの�
 ```bash
 > mkdir gradio-sample
 > cd gradio-sample
-> python3 -m venv venv
+> python -m venv venv
 > source ./venv/bin/activate
+  # Windows(CMD)では venv\Scripts\activate
+  # Windows(PowerSHell)では .\venv\Scripts\Activate.ps1
 > pip install gradio
 ```
 
@@ -405,7 +409,7 @@ demo.launch()  # ④
 なお、Gradioコードは、gradioコマンドではなく以下のようにpythonコマンドで実行することもできますが、この場合はホットリロードが無効になります。
 
 ```
-❯ python3 gr_hello.py
+❯ python gr_hello.py
 ```
 
 
@@ -469,11 +473,10 @@ import gradio as gr
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
 
 matplotlib.use('Agg')                 # ①
 
-def quadratic_plot(a, b, c) -> Figure:  # ②
+def quadratic_plot(a, b, c) -> plt.Figure:  # ②
   x = np.linspace(-10, 10, 400)
   y = a * x**2 + b * x + c
 
@@ -499,7 +502,7 @@ demo = gr.Interface(                  # ④
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 b"),
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
-  outputs=gr.Plot(value=initial_plot), # ⑥
+  outputs=gr.Plot(value=initial_plot),  # ⑥
   live=True,
   title="二次関数グラフ表示アプリ",
   description="下のスライダーで係数a,b,cを調整するとy=ax^2+bx+cのグラフが自動更新されます。"
@@ -589,22 +592,22 @@ import os
 load_dotenv()  # ④
 
 client = OpenAI(
-  base_url=os.getenv("BASE_URL"),       # ⑤
-  api_key=os.getenv("OPENAI_API_KEY")   # ⑥
+  api_key=os.getenv("OPENAI_API_KEY")    # ⑤
 )
 
+# ⑥
 SYSTEM_PROMPT = {"role": "system",
                  "content": "あなたは親切なAIチャットボットです。\
-                 日本語で回答してください。"}  # ⑦
+                 日本語で回答してください。"}
 
-# ⑧
+# ⑦
 def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
   response = client.chat.completions.create(
-    model=os.getenv("MODEL"),  # ⑨
+    model=os.getenv("MODEL"),  # ⑧
     messages=messages,
-    stream=True,               # ⑩
+    stream=True,               # ⑨
   )
-  return response               # ⑪
+  return response               # ⑩
 ```
 
 リスト11を解説していきます。
@@ -615,9 +618,9 @@ def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
 
 ③④では、.envファイルが存在すればそれを読み込み、環境変数としてセットしてくれるdotenvライブラリをインポートし使用しています。
 
-⑤⑥では、変数「base_url」「api_key」を環境変数から設定します。
+⑤では引数「api_key」を環境変数から設定します。
 
-⑦LLMに与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleキーと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleには表2のものがあり、用途に応じて使用します。
+⑥LLMに与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleキーと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleには表2のものがあり、用途に応じて使用します。
 
 [表2●OpenAI互換のAPIにおけるメッセージのrole種別]
 |role|説明|
@@ -626,13 +629,13 @@ def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
 |user|人間がLLMに対して送るメッセージ|
 |assistant|AIアシスタントからの回答|
 
-⑧で定義している関数「chat_completion_stream()」はチャト履歴をあらわす辞書のリストを受け取り、ストリーミング応答をジェネレータとして返す関数です。
+⑦で定義している関数「chat_completion_stream()」はチャト履歴をあらわす辞書のリストを受け取り、ストリーミング応答をジェネレータとして返す関数です。
 
-⑨では使用する生成AIのモデルを環境変数から取得します。
+⑧では使用する生成AIのモデルを環境変数から取得します。
 
-⑩ではストリーミングモードを有効にしています。この変数がTrueか否かで返り値の型がジェネレータどうかが決定されます。
+⑨ではストリーミングモードを有効にしています。この変数がTrueか否かで返り値の型がジェネレータどうかが決定されます。
 
-⑪では、OpenaAIのAPI呼び出しの結果であるジェネレータとしてのレスポンスをそのまま返します。
+⑩では、OpenaAIのAPI呼び出しの結果であるジェネレータとしてのレスポンスをそのまま返します。
 
 #### StreamlitでチャットAIを作る
 
@@ -739,7 +742,7 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
     if chunk is not None:
       # チャンクJSONのdelta部分を変数ai_messageに累積追加する
       ai_message += chunk # ⑦
-  yield ai_message  # ⑧
+      yield ai_message  # ⑧
 
 demo = gr.ChatInterface(fn=chat_response, type="messages",
                         title="チャットAI(Gradio)")  # ⑨
@@ -766,67 +769,56 @@ Gradio版のコードについて解説していきましょう。
 生成AIアクセス用の共通モジュール「chatai_util.py」で定義した関数「chat_completion_stream()」を使ってLLMに送信します。
 ストリーミング形式(streaming=True)で応答を取得するので、結果はGeneratorとなります。
 
-⑤AIからストリーミングで得られるメッセージはチャンク化された断片なので、それを結合して保持するための変数「ai_message」を用意します。
+⑤AIからのチャンク化された応答(JSON型式の応答断片)を取り出して、それを累積的に結合して保持するための変数「ai_message」を用意します。
 ⑥⑦では、関数「chat_completion_stream()」の呼び出しで取得したチャンクを1つずつ処理して、ai_messageに追加していきます。
 
-⑧で、1つの応答文字列が得られたら、それをyieldで返します。
+⑧で、途中経過としての応答文字列「ai_message」をyieldで返します。
 
-この関数「chat_response()」全体では、LLMが返却するチャンク(JSON型式の応答断片)のジェネレータを、
-AIからの回答単位の文字列のジェネレータに変換していることになります。
+この関数「chat_response()」全体では、LLMが返却するチャンク(JSON型式の応答断片)のジェネレータを、徐々に累積されて伸びていく応答文字列のジェネレータに変換していることになります。APIが返す区切りでの「応答断片のジェネレータ」ではないことに注意が必要です。
 
 ⑨Gradioでの高レベルなチャットコンポーネントである「gr.ChatInterface()」を準備します。
-引数fnには文字列のジェネレータを返す関数「chat_response()」を与えることでストリーミング応答の漸増的表示を行うことができます。ここで引数type="messages"は、チャットのメッセージ形式で表示するように指定しています。タイトルも指定しています。
+引数fnには、「増加(もしくは変化)していく文字列のジェネレータ」を返す関数を渡します。ここで引数type="messages"は、チャットのメッセージ形式で表示するように指定しています。タイトルも指定しています。
 
 ### StreamlitとGradioのコード比較
 
-実装コードは、Streamlit版、Gradio版のいずれも機能量に対応するコード量としては非常に少なく、
-チャットAIを簡潔に実現できる高機能なライブラリが利用できているということが共通しています。
+Streamlit版・Gradio版ともに、実装コードは機能量に対して非常にコンパクトであり、チャットAIを簡潔に実現できる高機能なライブラリが活用されている点は共通しています。
 
-あえて違いを言えば、Streamlitのチャット機能にはチャット履歴管理が含まれず、その実装コード分がやや増えています。
-もっとも、Gradioはここで使用した高レベルな「gr.ChatInterface()」以外にも低レベルな「gr.Chatbot()」コンポーネントがあり、
-それを使った場合はコード量は増えるでしょう。
+強いて違いを挙げるとすれば、Streamlitのチャット機能にはチャット履歴の管理が含まれていないため、その分の実装コードがやや増えるという点があります。ただし、Gradioでも今回使用した高レベルな「gr.ChatInterface()」ではなく、低レベルな「gr.Chatbot()」コンポーネントを用いた場合は、同様にコード量が増えるでしょう。
 
-また、Streamlitの「st.write_stream()」コンポーネントはOpenAIのストリーミング呼び出しが返すジェネレータをそのまま受けつけ、
-チャンク中の要素の取り出しもまかせることができるため、その分Gradioよりもコード量が減っています。
+また、Streamlitの「st.write_stream()」コンポーネントは、OpenAIのストリーミング呼び出しが返すジェネレータをそのまま受け付け、チャンク処理を自動で行えるため、Gradioよりもコード量が少なくなるという特長があります。
 
-ただしこれらの点は、いずれも表層的な違いでしょう。StreamlitとGradioの最大かつ根本的な違いは、
-そのイベントハンドリングと画面更新についての考えかたと、その違いに基づく記述方法にあります
-(コラム: 「ユニークなStreamlitのイベントハンドリングと画面更新」)。
-Streamlitのユニークな点がプロジェクトに向いていると考えるかどうかは、StreamlitとGradioのどちらを選ぶかについて大きな判断理由の一つになるでしょう。
+ただし、これらは表面的な違いに過ぎません。StreamlitとGradioの本質的な違いは、イベントハンドリングと画面更新の設計思想にあり、それに基づくコードの記述方法が異なる点です（詳しくはコラム「ユニークなStreamlitのイベントハンドリングと画面更新」を参照）。この違いと、それによって「インタラクティブなワークフロー」がStreamlitでは書きやすいという効果がプロジェクトに適しているかどうかが、StreamlitとGradioの選択を決める重要な要素となるでしょう。
 
-また、機能やUIコンポーネントの充実度は、相互に影響を受けて活発に開発が進んでいるので一般的に言えるわけではありませんが、
-プロジェクトにおいて使いたい機能がそれぞれのライブラリで実装されているかどうかが、選択理由になることもありそうです。
+さらに、機能やUIコンポーネントの充実度は、両ライブラリが相互に影響を受けながら活発に開発が進められているため、一概に比較することはできません。しかし、プロジェクトで必要な機能が提供されているかは、選択の大きな判断基準になりそうです。
 
 <div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%l; background: lightblue">
 
 ##### コラム: ユニークなStreamlitのイベントハンドリングと画面更新
 
-Gradioの根底にあるイベントハンドリングは考えかたとしてはオーソドックスなものです。各UIコンポーネントはそれぞれがイベントハンドラをもっていて、各コンポーネントに紐付いたイベントハンドラで処理対象のコンポーネントを特定し、画面更新などの処理を繋いでいきます。
-この考えかたの元で、「gr.Interface()」などの引数として「**表示したい値を計算せよというコールバック**」にユーザロジックを渡すことで、UIの基本が構成されます。
+Gradioのイベントハンドリングは、比較的オーソドックスです。各UIコンポーネントが個別のイベントハンドラを持ち、特定のイベントが発生した際に対応する処理を実行し、画面を更新する仕組みです。
+この考えかたのもと、「gr.Interface()」などの引数として「**表示したい値を計算せよというコールバック**」にユーザロジックを渡すことがアプリの基本構造です。
 
-対して、Streamlitのイベントハンドリングと画面更新はまったく異なります。
-Streamlitではイベントハンドラは個々のUIコンポーネントに紐付いておらず、
-イベントが発生したときにはプログラム全体が再実行されます。
-つまり**プログラム全体が扱うイベント全てに対するイベントハンドラ**だと言えます。
+一方、Streamlitのイベントハンドリングと画面更新は、Gradioとはまったく異なるアプローチを取っています。Streamlitでは、各UIコンポーネントにイベントハンドラが紐付いているわけではなく、
+イベントが発生するとプログラム全体が再実行されます。つまり、**プログラム全体がイベントハンドラとして機能する**と言えます。
 
-プログラム全体がイベントハンドラなので
-「どの部品で何が起きたか」という分岐は、コンポーネントの返り値で行います。
-「if user_input := st.input():」というif文の本体がこのイベントに対する
-個別のイベントハンドラと同等であり、user_inputにはイベント発生元が保持する値が入っているのです。
+この設計のため、「どのコンポーネントで何が起きたか」という判定は、コンポーネントの返り値を使って行います。たとえば、次のようなコードでは、st.input() の返り値を user_input に格納し、値が入力された場合にのみ処理を実行します。
 
-また、本稿では詳しく説明できませんでしたが、このことによって、Streamlitでは
-キャッシュ処理や状態管理が重要になってきます。
+```
+if user_input := st.text_input("入力してください"):
+    # user_input に基づく処理を実行
+```
+
+この if 文のブロック内が、特定のイベントに限定したイベントハンドラとして機能しており、変数user_inputにはイベント発生元の値が格納されます。
+
+なお、本稿では詳しく触れていませんが、このイベントハンドリングの特性上、Streamlitではキャッシュ処理や状態管理が特に重要になります。適切に活用することで、効率的な画面更新を行うことが可能になります。
 </div>
 
 ## まとめ
 
-本稿では、人気のPython Web UIフレームワークである「Streamlit」と「Gradio」をご紹介しました。
+本稿では、人気のPython Web UIフレームワーク「Streamlit」と「Gradio」を紹介しました。
 
-いずれも、Pythonコードだけでアプリを開発できるという大きな魅力を持っています。
-また、どちらもPythonコードの記述量が少なく、直感的に扱え、学習コストが低いという点が秀逸です。
+どちらも、Pythonコードだけで直感的にアプリを開発できるという大きな魅力を持ち、記述量が少なく、学習コストの低さが特長です。
 
-両者とも、本稿で取り上げた機能はごくごく一部であり、
-良くドキュメント化された数多くの機能をもち、活発に開発が続いていることも共通しています。
-いずれも習熟すれば、迅速な開発に役立つ威力を発揮してくれるはずです。
+本稿で触れたのは両者の機能のごく一部にすぎませんが、いずれも充実したドキュメントが整備され、活発に開発が続けられています。習熟すれば、迅速なアプリ開発の強力な武器となるでしょう。
 
-本稿をきっかけに、できれば両方を試しながら好みや用途に合ったものを選択し、使い分けていただければ幸いです。
+できれば本稿を機会にぜひ両方を試し、それぞれの特性を理解しながら、自身の用途に合ったものを選び、使い分けていただければ幸いです。

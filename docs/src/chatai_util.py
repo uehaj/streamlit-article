@@ -7,19 +7,19 @@ import os
 load_dotenv()  # ④
 
 client = OpenAI(
-  base_url=os.getenv("BASE_URL"),       # ⑤
-  api_key=os.getenv("OPENAI_API_KEY")   # ⑥
+  api_key=os.getenv("OPENAI_API_KEY")    # ⑤
 )
 
+# ⑥
 SYSTEM_PROMPT = {"role": "system",
                  "content": "あなたは親切なAIチャットボットです。\
-                 日本語で回答してください。"}  # ⑦
+                 日本語で回答してください。"}
 
-# ⑧
+# ⑦
 def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
   response = client.chat.completions.create(
-    model=os.getenv("MODEL"),  # ⑨
+    model=os.getenv("MODEL"),  # ⑧
     messages=messages,
-    stream=True,               # ⑩
+    stream=True,               # ⑨
   )
-  return response               # ⑪
+  return response               # ⑩

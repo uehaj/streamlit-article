@@ -7,6 +7,6 @@ def invert_colors(img: np.ndarray) -> np.ndarray:
     return 255 - img
 
 demo = gr.Interface(fn=invert_colors, # ラッピングしたい関数fn
-                    inputs="image", # fnの引数に対するUIコンポーネントの指定(gr.Image())
-                    outputs="image") # fnの返り値に対するUIコンポーネントの指定(gr.Image())
+                    inputs=gr.Image(), # fnの引数に対するUIコンポーネントの指定
+                    outputs=gr.Image()) # fnの返り値に対するUIコンポーネントの指定
 demo.launch()

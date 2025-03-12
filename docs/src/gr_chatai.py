@@ -20,7 +20,7 @@ def chat_response(message: str, history: List[Dict[str, str]]) -> Generator:
     if chunk is not None:
       # チャンクJSONのdelta部分を変数ai_messageに累積追加する
       ai_message += chunk # ⑦
-  yield ai_message  # ⑧
+      yield ai_message  # ⑧
 
 demo = gr.ChatInterface(fn=chat_response, type="messages",
                         title="チャットAI(Gradio)")  # ⑨
