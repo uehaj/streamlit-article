@@ -3,10 +3,11 @@ import gradio as gr
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 matplotlib.use('Agg')                 # ①
 
-def quadratic_plot(a, b, c):          # ②
+def quadratic_plot(a, b, c) -> Figure:  # ②
   x = np.linspace(-10, 10, 400)
   y = a * x**2 + b * x + c
 
@@ -33,9 +34,9 @@ demo = gr.Interface(                  # ④
     gr.Slider(minimum=-10, maximum=10, step=0.1, value=0, label="係数 c")
   ],
   outputs=gr.Plot(value=initial_plot), # ⑥
-  live=True,                          # ⑦
+  live=True,
   title="二次関数グラフ表示アプリ",
-  description="下のスライダーで係数a,b,cを調整するとy=ax^2+b+cのグラフが自動更新されます。"
+  description="下のスライダーで係数a,b,cを調整するとy=ax^2+bx+cのグラフが自動更新されます。"
 )
 
 demo.launch()
