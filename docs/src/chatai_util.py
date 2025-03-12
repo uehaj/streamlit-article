@@ -22,7 +22,3 @@ def chat_completion_stream(messages: List[Dict[str, str]]) -> Generator:
     stream=True,               # ⑨
   )
   return response               # ⑩
-
-print(f"modl: {os.getenv('MODEL')}")
-print(f"base_url: {os.getenv('BASE_URL')}")
-print(f"api_key: {os.getenv('OPENAI_API_KEY')}")
