@@ -370,12 +370,12 @@ Pythonがインストールされていることを前提として、Gradioの�
 
 ```python
 # gr_hello.py
-import gradio as gr # ①
+import gradio as gr  # ①
 
 with gr.Blocks() as demo:   # ②
   gr.Markdown("Hello, world!")   # ③
 
-demo.launch() # ④
+demo.launch()  # ④
 ```
 
 リスト8の実行をするには以下のコマンドを実行します。デフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザから「http://localhost:7860」でアクセスできるようになります。
