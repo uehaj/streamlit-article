@@ -541,10 +541,10 @@ macOSの場合はHomebrewでもインストールできます。
 
 ollamaのインストール完了後、LLMモデルを以下のようにダウンロードし(①)、
 APIサーバを起動します(②)。このとき、curlコマンドで動作確認を行っておくと良いでしょう(③)。
-以下ではモデルとしてgemma2:7bを利用しています。
+以下ではモデルとしてgemma2を利用しています。
 
 ```bash
-❯ ollama pull gemma2:7b # ①
+❯ ollama pull gemma2    # ①
 ❯ ollama serve          # ②
 ❯ curl http://localhost:11434/v1/models # ③
 ```
@@ -560,7 +560,7 @@ APIキーとエンドポイント、モデルの情報を「.env」という名�
 ```
 OPENAI_API_KEY=dummy
 OPENAI_BASE_URL=http://localhost:11434/v1
-MODEL=gemma:7b
+MODEL=gemma2
 ```
 
 OpenAIのAPIを使用する場合は、別途OpenAIのAPIキーを入手した上で例えば以下のようにします。
