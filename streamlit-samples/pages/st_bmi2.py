@@ -1,4 +1,4 @@
-# bmi_streamlit.py
+# st_bmi2.py
 import streamlit as st
 
 def bmi(height, weight):

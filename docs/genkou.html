@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x4eba;&#x6c17;&#x306e;&#x4e8c;&#x5927;Python Web UI&#x30d5;&#x30ec;&#x30fc;&#x30e0;&#x30ef;&#x30fc;&#x30af;&#x3092;&#x4f7f;&#x3044;&#x5206;&#x3051;&#x3088;&#x3046;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 12px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="人気の二大python-web-uiフレームワークを使い分けよう">人気の二大Python Web UIフレームワークを使い分けよう</h1>
+<h2 id="streamlit--gradio入門">Streamlit ＆ Gradio入門</h2>
+<p>NTTテクノクロス株式会社 上原潤二</p>
+<h3 id="はじめに">はじめに</h3>
+<p>最近、Python界隈では、美しくインタラクティブなWebアプリケーションを簡単に作成できる「Python Web UIフレームワーク」が人気を集めています。
+その中でも特に注目されているのが、「Streamlit（ストリームリット）」と「Gradio（グレディオ）」の二つです。</p>
+<p>これらのフレームワークを使えば、HTMLやJavaScript、CSSなどのWebフロントエンド技術を直接扱わずに、PythonのみでWebアプリを開発できます。そのため、学習コストを抑えつつ、ロジックの本質部分に集中できます。この特徴により、従来よりも短時間で、見通しの良いコードを開発することができるのです。</p>
+<p>ただし、それぞれ異なるコンセプトを持つため、開発するアプリの特性に応じて適切なフレームワークを選ぶことが重要です。本稿では、両者の特徴と基本的な使い方を比較しながら解説していきます。</p>
+<h3 id="python-web-uiフレームワークとは">Python Web UIフレームワークとは</h3>
+<p>Python Web UIフレームワークとは何でしょうか？有名なDjangoやFlask、FastAPIなどのWebフレームワークとは何が違うのでしょうか？まずは、その違いを説明します。
+一般に、Python Web UIフレームワークには以下のような特徴があります。</p>
+<ul>
+<li>インタラクティブな処理やグラフ表示などのための豊富なUIコンポーネントが標準的に準備されており、高度なUIを少ない記述で容易に実現できる。</li>
+<li>HTML、CSS、JavaScript、SPAなどのWebフロントエンド技術が隠蔽されており、基本的にPythonコードだけでWebアプリを作成できる。</li>
+<li>ブラウザとサーバー間の通信処理（HTTP）も隠蔽されており、たとえばPOSTやGETなどのHTTPリクエストを意識する必要がない。</li>
+<li>データベースアクセスなどのバックエンド機能は含まれず、UI開発のみに特化している。</li>
+</ul>
+<p>以上により、見栄えの良い操作しやすいWebアプリケーションを比較的短期間で開発できます。一方で、画面作成上の自由度や表現力は限られ、表示速度や反応速度は、従来のチューニングされたWebアプリケーションに比べて劣ることが多いでしょう。</p>
+<p>このため、高いパフォーマンスが求められる大規模なWebアプリよりも、社内ツールやダッシュボード、データ可視化アプリなど、比較的負荷の低い用途に適しています。またPoC(原理実証)やMVP(顧客のニーズを満たす最小限のプロダクト)の開発や、比較的小規模の開発に向いていると言えるでしょう。</p>
+<h3 id="streamlitとgradioとflaskの比較">StreamlitとGradioとFlaskの比較</h3>
+<p>表1に主な特徴の比較表を示します。また参考として、Pythonの簡易Webアプリフレームワークとして代表的なFlaskの情報を示しました。</p>
+<p>[表1● StreamlitとGradio、およびFlaskの比較]</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Streamlit</th>
+<th>Gradio</th>
+<th>Flask</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>開発言語</strong></td>
+<td>Python</td>
+<td>Python</td>
+<td>Python/HTML/CSS/JS</td>
+</tr>
+<tr>
+<td><strong>典型的な用途</strong></td>
+<td>インタラクティブなダッシュボード</td>
+<td>機械学習モデルのデモ</td>
+<td>任意のWebアプリ</td>
+</tr>
+<tr>
+<td><strong>UI構築の概念</strong></td>
+<td>画面構築とイベントハンドラの融合</td>
+<td>関数を対話的なアプリに変えるラッパー</td>
+<td>Flask単体ではUIを提供しない</td>
+</tr>
+<tr>
+<td><strong>組み込みUIコンポーネント</strong></td>
+<td>多数の標準UIあり</td>
+<td>多数の標準UIあり</td>
+<td>なし（Flask単体ではUIを提供しない）</td>
+</tr>
+<tr>
+<td><strong>学習コスト</strong></td>
+<td>低い（PythonのみでOK）</td>
+<td>低い（PythonのみでOK）</td>
+<td>高い（フロントエンド技術が必要）</td>
+</tr>
+<tr>
+<td><strong>カスタマイズの自由度</strong></td>
+<td>低</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>スケーラビリティ</strong></td>
+<td>〜中規模向け</td>
+<td>〜中規模向け</td>
+<td>高（規模によらない）</td>
+</tr>
+</tbody>
+</table>
+<p>StreamlitとGradioの両者にはPython Web UIフレームワークとして重なるところも大きいのですが、重要な違いをいくつか示しておきます。</p>
+<h4 id="streamlitは実行の過程が画面配置を決める">Streamlitは実行の過程が画面配置を決める</h4>
+<p>コンソールで実行するPythonのコマンドラインプログラムとして、リスト1を考えてみてください。</p>
+<p>[リスト1●cli_inputoutput.py。コンソールで入出力を行うPythonプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># cli_inputoutput.py</span>
+a = <span class="hljs-built_in">float</span>(<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;A = &quot;</span>))  <span class="hljs-comment"># ①</span>
+b = <span class="hljs-built_in">float</span>(<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;B = &quot;</span>))  <span class="hljs-comment"># ②</span>
+<span class="hljs-keyword">if</span> b != <span class="hljs-number">0</span>:
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;A/B = &quot;</span>, a / b)  <span class="hljs-comment"># ③</span>
+<span class="hljs-keyword">else</span>:
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;error&quot;</span>)
+</code></pre>
+<p>このコードは「python cli_inputoutput.py」でコンソールから実行できます(図1)。</p>
+<p>[図1●リスト1の実行例]</p>
+<img src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/cli_inputoutput.png" width="300px" />
+<p>リスト1では、①②での入力の結果を得て、③でそれを出力するような実行の過程を記述しています。
+Streamlitではこのような処理をリスト2のように記述できます。</p>
+<p>[リスト2●st_inputoutput.py。Streamlitで入出力を行うWebアプリケーション]</p>
+<pre><code class="language-python"><span class="hljs-comment"># st_inputoutput.py</span>
+<span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+
+a = st.number_input(<span class="hljs-string">&quot;A&quot;</span>) <span class="hljs-comment"># ①</span>
+b = st.number_input(<span class="hljs-string">&quot;B&quot;</span>) <span class="hljs-comment"># ②</span>
+<span class="hljs-keyword">if</span> b != <span class="hljs-number">0</span>:
+  st.write(<span class="hljs-string">&quot;A/B = &quot;</span>, a / b)
+<span class="hljs-keyword">else</span>:
+  st.write(<span class="hljs-string">&quot;error&quot;</span>)
+</code></pre>
+<p>コンソール版のものと記述の流れほぼと対応していることがわかります。
+このように、
+画面にUIコンポーネントを配置するための記述と、プログラムの実行処理の記述が表裏一体になっていることがStreamlitの大きな特徴です。</p>
+<p>これを「streamlit run st_inputoutput.py」として実行し、
+ブラウザでlocalhostの8085ポートを開くと図2のようにWebアプリケーションとして実行することができます。</p>
+<p>[図2●リスト2の実行結果]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_inputoutput.png" width="480px" />
+<div style="border: 1px solid #ccc; border-radius: 1rem; margin: 1rem; padding: 0rem 1rem 1rem 1rem; width: 90%; background: lightyellow;">
+<p><font size="+3">⚠</font></p>
+<p>なお、コンソール版とStreamlit版では動作の大きな違いもあります。コンソール版の「input()」は、ユーザーが文字列を入力し、エンターキーを押すまで処理をブロックします。一方で、StreamlitのUIコンポーネント(ここでは「st.number_input()」)は、呼び出しても<strong>処理をブロックしません</strong>。</p>
+<p>そのため、リスト2の①でaへの入力を待つことなく、②のbの入力欄も最初から表示されます。このことはStreamlitプログラムの動作を理解するうえで重要なポイントの一つです。</p>
+</div>
+<h4 id="gradioは関数を対話的なアプリに変えるラッパー">Gradioは関数を対話的なアプリに変えるラッパー</h4>
+<p>Gradioはもともと機械学習モデルのインタラクティブなデモの作成を目的として開発されていて、
+機械学習モデルを共有・公開するサイトHugging Faceで活用されています。
+ただし、Gradioは機械学習モデルのデモに留まらない、豊富で汎用的な機能を備えており、
+本稿でも汎用的なPython Web UIフレームワークとして見たときの機能やプログラミングについて解説します。</p>
+<p>それを前提として、Gradioを一言で説明するならば、<strong>「関数を対話的なアプリに変えるラッパー」</strong> です。例として、Gradioのコード例リスト3を見てみましょう。</p>
+<p>[リスト3●gr_invert.py。画像を反転させるアプリケーション]</p>
+<pre><code class="language-python"><span class="hljs-comment"># gr_invert.py</span>
+<span class="hljs-keyword">import</span> gradio <span class="hljs-keyword">as</span> gr
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+<span class="hljs-comment"># 色を反転させる関数</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">invert_colors</span>(<span class="hljs-params">img: np.ndarray</span>) -&gt; np.ndarray:
+    <span class="hljs-keyword">return</span> <span class="hljs-number">255</span> - img
+
+demo = gr.Interface(fn=invert_colors, <span class="hljs-comment"># ラッピングしたい関数fn</span>
+                    inputs=gr.Image(), <span class="hljs-comment"># fnの引数に対するUIコンポーネント指定</span>
+                    outputs=gr.Image()) <span class="hljs-comment"># fnの返り値に対するUIコンポーネント指定</span>
+demo.launch()
+</code></pre>
+<p>リスト3の実行例は図3です。左側のパートに画像をアップロードして「Submit」ボタンを押下すると右側に色を反転させた画像が表示されます。</p>
+<p>[図3●リスト3の実行結果]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/gr_invert.png" width="800px"/>
+<p>これはGradioでの典型的なコード例であり、データとして画像の色を反転させる関数「invert_colors」を作成し、
+それを「gr.Interface()」でラッピングするだけで、任意の画像ファイルをアップロードして反転処理をすることができる、
+見栄えのよいWebアプリケーションを作成できます。</p>
+<h3 id="streamlit入門">Streamlit入門</h3>
+<p>ではここからはそれぞれのフレームワークの利用方法とプログラミング方法について、簡単に一巡りしていきます。まずはStreamlitからです。</p>
+<h4 id="streamlitのインストール">Streamlitのインストール</h4>
+<p>Pythonがインストールされていることを前提として、Streamlitのインストール方法は以下の通りです。</p>
+<pre><code class="language-bash">&gt; <span class="hljs-built_in">mkdir</span> streamlit-sample
+&gt; <span class="hljs-built_in">cd</span> streamlit-sample
+&gt; python -m venv venv
+&gt; <span class="hljs-built_in">source</span> ./venv/bin/activate
+  <span class="hljs-comment"># Windows(CMD)では venv\Scripts\activate</span>
+  <span class="hljs-comment"># Windows(PowerSHell)では .\venv\Scripts\Activate.ps1</span>
+&gt; pip install streamlit
+</code></pre>
+<h4 id="streamlitでhello-worldと表示するプログラム">Streamlitで「Hello, world!」と表示するプログラム</h4>
+<p>次に、Streamlitで「Hello, world!」を表示するプログラムを作成します(リスト4)。</p>
+<p>[リスト4●st_hello.py。Streamlitで「Hello, world!」を表示するプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># st_hello.py</span>
+<span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st <span class="hljs-comment"># ①</span>
+
+st.write(<span class="hljs-string">&quot;Hello, world!&quot;</span>) <span class="hljs-comment"># ②</span>
+</code></pre>
+<p>リスト4を解説すると、①ではStreamlitライブラリをインポートし「st」という短縮名で利用できるようにします。
+次に、②ではWebブラウザに文字列を表示するために「st.write()」コンポーネントを呼び出します。以下のコマンドを実行することでWebアプリとして起動できます。</p>
+<pre><code class="language-bash">&gt; streamlit run st_hello.py
+</code></pre>
+<p>起動後にWebブラウザでlocalhostのポート番号8501を開くと、作成したWebアプリを図4-1のように実行できます。</p>
+<p>[図4-1●リスト4の実行結果]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_hello.png" width="480px" >
+<p>ここで、プログラムを実行したままバックグラウンドでPythonコードを変更・保存することで、再起動無しでプログラムを置き換える、いわゆるホットリロードを行うことができます。たとえば「st_hello.py」の「st.write(&quot;Hello world!&quot;)」を「st.markdown(&quot;こんにちは**世界!**&quot;)」にエディタで書き換えて保存すると、
+StreamlitのランタイムはPythonコードのファイル更新を検知して、ブラウザの画面上部に以下を表示します。</p>
+<p>[図4-2●リスト4の再実行時の画面上部]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_hello2.png" width="480px" style="border: solid 1px" />
+<p>ここで「<u>R</u>erun」をクリックすると一回だけの再実行ができます。「<u>A</u>lways rerun」をクリックするとPytyonコードが更新されるたびに自動で再読み込みと再実行が行なわれるようになります。</p>
+<p>[図4-3●リスト4の修正版の再実行結果]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_hello3.png" width="480px" style="border: solid 1px" />
+<h4 id="streamlitでのbmi計算機のプログラム">StreamlitでのBMI計算機のプログラム</h4>
+<p>次の題材として、BMI(ボディ・マス指数、体重と身長の比率から計算される体格の指標)
+を計算するプログラムをStreamlitで作成してみます(リスト5)。</p>
+<p>[リスト5●st_bmi.py。Streamlitで作ったBMI計算機のプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># st_bmi.py</span>
+<span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">bmi</span>(<span class="hljs-params">height, weight</span>):  <span class="hljs-comment"># ①</span>
+  <span class="hljs-keyword">return</span> weight / (height / <span class="hljs-number">100</span>) ** <span class="hljs-number">2</span>  <span class="hljs-comment"># ②</span>
+
+<span class="hljs-keyword">if</span> height := st.number_input(<span class="hljs-string">&quot;身長(cm)&quot;</span>):  <span class="hljs-comment"># ③</span>
+  <span class="hljs-keyword">if</span> weight := st.number_input(<span class="hljs-string">&quot;体重(kg)&quot;</span>):  <span class="hljs-comment"># ④</span>
+    <span class="hljs-keyword">if</span> height &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> weight &gt; <span class="hljs-number">0</span>:  <span class="hljs-comment"># ⑤</span>
+      bmi_value = bmi(height, weight)  <span class="hljs-comment"># ⑥</span>
+      st.markdown(<span class="hljs-string">f&quot;BMI = <span class="hljs-subst">{bmi_value:<span class="hljs-number">.2</span>f}</span>&quot;</span>)  <span class="hljs-comment"># ⑦</span>
+    <span class="hljs-keyword">else</span>:
+      st.markdown(<span class="hljs-string">&quot;身長と体重を入力してください&quot;</span>)
+</code></pre>
+<p>リスト5を実行すると、まず身長欄のみが表示されます。そして身長を入力すると体重入力欄が表示され、体重を入力すると結果が表示される、というように逐次実行されます(図5)。</p>
+<p>[図5●リスト5の実行結果]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_bmi_.png" width="480px" />
+<p>リスト5のプログラムを説明します。まず、①②ではBMIを計算する関数を定義しています。これは通常のPythonの関数定義です。</p>
+<p>③④では身長と体重の入力欄を表示し、入力された値をそれぞれheight、weightの変数に保存します。
+なお、ここで使用されている「:=」は、Python 3.8で導入された「代入と同時にその値を返す演算子」です。
+この演算子を使わない場合、③のif文は、</p>
+<pre><code class="language-python">height = st.number_input(<span class="hljs-string">&quot;身長(cm)&quot;</span>):
+<span class="hljs-keyword">if</span> height:
+  :
+</code></pre>
+<p>とも書けますが、コードがやや冗長になります。</p>
+<p>ここでのif文は、入力が空(None)であればif文本体は実行されないので、
+「身長が入力されると体重の入力欄が表示され、体重の入力をすると結果が表示される」
+という動作を実現しています。</p>
+<p>このように、入力が進行するにつれその処理結果や次の入力欄が次々に下に追記されていく、
+いわば「インタラクティブなワークフロー」とでも言うべき処理を簡単に書けることがStreamlitの特徴の一つです。
+このような動作は、コンソールで動作するプログラムやGoogle Collabでの実行とイメージが似ています。
+ちなみに、ここで仮にif文でネストさせずに、以下のようにフラットに入力欄を並べて書いていたとしたら、
+身長(heght)欄と体重(weight)の入力欄は同時に表示されます。</p>
+<pre><code class="language-python">height = st.number_input(<span class="hljs-string">&quot;身長(cm)&quot;</span>):
+weight = st.number_input(<span class="hljs-string">&quot;体重(kg)&quot;</span>):
+</code></pre>
+<p>⑤では、入力された身長と体重が0より大きいことをチェックしています。0以下である場合はエラーメッセージを表示し、そうでなければ関数bmiを呼び出してBMIの値を整形して表示します(⑥⑦)。</p>
+<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%; background: lightblue">
+<h5 id="コラム-if文のネストを避ける方法">コラム: if文のネストを避ける方法</h5>
+<p>if文のネストを使うことで、処理結果を次々と表示してくような処理がStreamlitでは書きやすいことを示しました。しかし処理が何段階にも連なっていくとif文のネストが深くなってしまいます。
+これを避けるには、リスト6のようにプログラムのトップレベルを関数にして、継続しないときにifの条件を反転させてreturnするように記述すると良いでしょう。</p>
+<p>[リスト6●処理の段階が増えてもネストが深くならない記述方法]</p>
+<pre><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (height := st.number_input(<span class="hljs-string">&quot;身長(cm)&quot;</span>)):
+    <span class="hljs-keyword">return</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (weight := st.number_input(<span class="hljs-string">&quot;体重(kg)&quot;</span>)):
+    <span class="hljs-keyword">return</span>
+  <span class="hljs-keyword">if</span> height &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> weight &gt; <span class="hljs-number">0</span>:
+    bmi_value = bmi(height, weight)
+    st.markdown(<span class="hljs-string">f&quot;BMI = <span class="hljs-subst">{bmi_value:<span class="hljs-number">.2</span>f}</span>&quot;</span>)
+  <span class="hljs-keyword">else</span>:
+    st.markdown(<span class="hljs-string">&quot;身長と体重を入力してください&quot;</span>)
+
+main()
+</code></pre>
+</div>
+<h4 id="streamlitで二次関数を描画するプログラム">Streamlitで二次関数を描画するプログラム</h4>
+<p>次に紹介するのは、ユーザーが入力する係数 a, b, c に基づいて、2次関数「y= ax^2 + bx + c」のグラフを描画するプログラムです。</p>
+<p>まず、準備として、グラフ表示のためにPythonのグラフ描画ライブラリであるmatplotlibをパッケージとしてインストールしておきます。</p>
+<pre><code class="language-bash">❯ pip install matplotlib
+</code></pre>
+<p>プログラムコードはリスト7の通りです。</p>
+<p>[リスト7●st_graph.py。Streamlitで作った2次関数のグラフを描画するプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># st_graph.py</span>
+<span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np               <span class="hljs-comment"># ①</span>
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  <span class="hljs-comment"># ②</span>
+
+st.title(<span class="hljs-string">&quot;2次関数のグラフ描画&quot;</span>)
+
+col1, col2 = st.columns(<span class="hljs-number">2</span>)       <span class="hljs-comment"># ③</span>
+<span class="hljs-keyword">with</span> col1:                       <span class="hljs-comment"># ④</span>
+  a = st.number_input(<span class="hljs-string">&quot;係数 a&quot;</span>, value=<span class="hljs-number">1.0</span>)  <span class="hljs-comment"># ⑤</span>
+  b = st.number_input(<span class="hljs-string">&quot;係数 b&quot;</span>, value=<span class="hljs-number">0.0</span>)  <span class="hljs-comment"># ⑥</span>
+  c = st.number_input(<span class="hljs-string">&quot;係数 c&quot;</span>, value=<span class="hljs-number">0.0</span>)  <span class="hljs-comment"># ⑦</span>
+<span class="hljs-keyword">with</span> col2:                       <span class="hljs-comment"># ⑧</span>
+  x = np.linspace(-<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">400</span>)   <span class="hljs-comment"># ⑨</span>
+  y = a * x**<span class="hljs-number">2</span> + b * x + c        <span class="hljs-comment"># ⑩</span>
+
+  fig, ax = plt.subplots()        <span class="hljs-comment"># ⑪</span>
+  ax.plot(x, y, label=<span class="hljs-string">f&#x27;y = ax^2 + bx + c\na=<span class="hljs-subst">{a}</span>, b=<span class="hljs-subst">{b}</span>, c=<span class="hljs-subst">{c}</span>&#x27;</span>)
+  ax.axhline(<span class="hljs-number">0</span>, color=<span class="hljs-string">&#x27;black&#x27;</span>, linewidth=<span class="hljs-number">0.5</span>)
+  ax.axvline(<span class="hljs-number">0</span>, color=<span class="hljs-string">&#x27;black&#x27;</span>, linewidth=<span class="hljs-number">0.5</span>)
+  ax.grid(color=<span class="hljs-string">&#x27;gray&#x27;</span>, linestyle=<span class="hljs-string">&#x27;--&#x27;</span>, linewidth=<span class="hljs-number">0.5</span>)
+  ax.legend()
+
+  st.pyplot(fig)                 <span class="hljs-comment"># ⑫</span>
+</code></pre>
+<p>このプログラムの実行の様子を図7に示します。左側に係数の入力欄が表示され、
+右側に入力された係数に応じた2次関数のグラフが表示されます。</p>
+<p>[図7●リスト7の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_graph.png" width="480px" />
+<p>このプログラムを説明していきます。</p>
+<p>①②では、グラフの描画に必要なNumPyとmatplotlibの必要なモジュールをインポートします。</p>
+<p>次にプログラムのタイトルとして「2次関数のグラフ描画」を表示します。
+③④⑧ではStreamlitのUIコンポーネント「st.columns(2)」をつかって画面を左右の2つのカラムに分割します。
+「col1」には左側、「col2」には左側のカラムが設定されます。with句を使うとコンテキストが作成され、その内側でのUIコンポーネントの呼び出しはそのブロック内に配置されるようになります。</p>
+<p>⑤⑥⑦では左側のカラムに係数a,b,cの入力欄を配置します。入力結果は変数a,b,cに格納されます。</p>
+<p>⑧以降、右側のカラムにグラフ表示コンポーネントを配置していきます。</p>
+<p>まず、⑨ではx軸の系列の値として、-10から10までの範囲で400個の等間隔な数値を生成します。
+⑩では、y軸の系列の値として、ユーザーが入力した係数を用いて、2次関数「ax^2 + bx + c」の結果の系列データを計算します。</p>
+<p>⑪以降、matplotlibを使用して、2次関数のグラフを描画し、軸やグリッドや凡例も追加したグラフを作成します。</p>
+<p>⑫では、作成したグラフをStreamlit上に配置します。</p>
+<h3 id="gradio入門">Gradio入門</h3>
+<p>ここからはGradioの入門編ということでGradioのインストールと実行方法、プログラミングについて簡単に解説していきます。</p>
+<h4 id="gradioのインストール">Gradioのインストール</h4>
+<p>Pythonがインストールされていることを前提として、Gradioのインストール方法は以下の通りです。</p>
+<pre><code class="language-bash">&gt; <span class="hljs-built_in">mkdir</span> gradio-sample
+&gt; <span class="hljs-built_in">cd</span> gradio-sample
+&gt; python -m venv venv
+&gt; <span class="hljs-built_in">source</span> ./venv/bin/activate
+  <span class="hljs-comment"># Windows(CMD)では venv\Scripts\activate</span>
+  <span class="hljs-comment"># Windows(PowerSHell)では .\venv\Scripts\Activate.ps1</span>
+&gt; pip install gradio
+</code></pre>
+<h4 id="gradioで-hello-worldと表示するプログラム">Gradioで 「Hello, world!」と表示するプログラム</h4>
+<p>リスト8は、Gradioを用いて「Hello, world!」を表示するプログラムです。</p>
+<p>[リスト8●「gr_hello.py」。Gradioで「Hello, world!」を表示するプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># gr_hello.py</span>
+<span class="hljs-keyword">import</span> gradio <span class="hljs-keyword">as</span> gr  <span class="hljs-comment"># ①</span>
+
+<span class="hljs-keyword">with</span> gr.Blocks() <span class="hljs-keyword">as</span> demo:   <span class="hljs-comment"># ②</span>
+  gr.Markdown(<span class="hljs-string">&quot;Hello, world!&quot;</span>)   <span class="hljs-comment"># ③</span>
+
+demo.launch()  <span class="hljs-comment"># ④</span>
+</code></pre>
+<p>リスト8の実行をするには以下のコマンドを実行します。デフォルトではローカルホストの特定ポート7860でWebサーバが起動し、ブラウザから「<a href="http://localhost:7860">http://localhost:7860</a>」でアクセスできるようになります。</p>
+<pre><code>❯ gradio gr_hello.py
+</code></pre>
+<p>実行結果は図8の通りです。</p>
+<p>[図8●リスト8の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/gr_hello.png" width="480px" />
+<p>以下、リスト8を解説していきます。</p>
+<p>①ではGradioライブラリをインポートし、短縮名としてgrを割りあてています。</p>
+<p>②ではレイアウトのためのUIコンポーネントであるgr.Blocks()を作成し、その内側にコンポーネントを配置する準備をしています。with句を使うとコンテキストが作成され、その内側での「gr.Markdown()」などのコンポーネントの呼び出しはそのブロック内に配置されるようになります。作成したブロックを「as demo」でasという変数に格納しています。</p>
+<p>④では、demoに格納されたBrocksに対して「launch()」メソッドを呼び出し、Webアプリケーションとして起動します。ホットリロードも可能です。</p>
+<pre><code>❯ gradio gr_hello.py
+</code></pre>
+<p>なお、Gradioコードは、gradioコマンドではなく以下のようにpythonコマンドで実行することもできますが、この場合はホットリロードが無効になります。</p>
+<pre><code>❯ python gr_hello.py
+</code></pre>
+<h4 id="gradioでのbmi計算機のプログラム">GradioでのBMI計算機のプログラム</h4>
+<p>GradioでBMIを計算するプログラムを作成したものがリスト9になります。</p>
+<p>[リスト9●「gr_bmi.py」。Gradioで作ったBMI計算機のプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># gr_bmi.py</span>
+<span class="hljs-keyword">import</span> gradio <span class="hljs-keyword">as</span> gr
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">bmi</span>(<span class="hljs-params">height, weight</span>):  <span class="hljs-comment"># ①</span>
+  <span class="hljs-keyword">return</span> weight / (height / <span class="hljs-number">100</span>) ** <span class="hljs-number">2</span>
+
+demo = gr.Interface(      <span class="hljs-comment"># ②</span>
+  fn=bmi,                <span class="hljs-comment"># ③</span>
+  inputs=[               <span class="hljs-comment"># ④</span>
+    gr.Number(label=<span class="hljs-string">&quot;身長 (cm)&quot;</span>),  <span class="hljs-comment"># ⑤</span>
+    gr.Number(label=<span class="hljs-string">&quot;体重 (kg)&quot;</span>)   <span class="hljs-comment"># ⑥</span>
+  ],
+  outputs=gr.Number(label=<span class="hljs-string">&quot;BMI&quot;</span>), <span class="hljs-comment"># ⑦</span>
+  live=<span class="hljs-literal">True</span>              <span class="hljs-comment"># ⑧</span>
+)
+
+demo.launch()            <span class="hljs-comment"># ⑨</span>
+</code></pre>
+<p>実行例は図9になります。左側の身長、体重欄に値を入力すると右側にリアルタイムで計算結果が表示されます。</p>
+<p>[図9●リスト9の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/gr_bmi.png?" width="480px" />
+<p>リスト9のプログラムを説明していきます。</p>
+<p>①はBMIを計算する関数bmiの定義です。Streamlit版と全く同じものです。</p>
+<p>②では関数の高レベルの汎用UIラッパーである「gr.Interface()」を呼び出し、demoに保存します。
+「gr.Interface()」にはラッピングする対象の関数fn(③)、
+関数fnへの入力の型式や方法を規定するinputs(④)、
+関数fnの返り値を規定するoutputs(⑦)などを引数として与えます。</p>
+<p>⑤⑥では、fnの引数である身長と体重の数値の入力方法として、コンポーネント「gr.Number()」を指定します。
+⑦では、fnの結果の表示方法として、同じくコンポーネント「gr.Number()」を指定します。</p>
+<p>⑧でlive=Trueに設定すると、計算結果は入力が変化したときにリアルタイムで結果が表示されます。出力に時間がかかる場合などはlive=FalseとすることでSubmitボタンを押したときのみ結果を表示するようにできます。デフォルトはlive=Falseです。</p>
+<p>⑨では、「demo.launch()」によりGradioのgr.InterfaceコンポーネントをWebアプリとして起動します。</p>
+<h4 id="gradioで二次関数のグラフを描画するプログラム">Gradioで二次関数のグラフを描画するプログラム</h4>
+<p>続いて、Gradioでも二次関数を表示するプログラムを作成してみましょう(リスト10)。</p>
+<p>[リスト10●gr_graph.py。Gradioで作った2次関数のグラフを描画するプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># gr_graph.py</span>
+<span class="hljs-keyword">import</span> gradio <span class="hljs-keyword">as</span> gr
+<span class="hljs-keyword">import</span> matplotlib
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+
+matplotlib.use(<span class="hljs-string">&#x27;Agg&#x27;</span>)                 <span class="hljs-comment"># ①</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">quadratic_plot</span>(<span class="hljs-params">a, b, c</span>) -&gt; plt.Figure:  <span class="hljs-comment"># ②</span>
+  x = np.linspace(-<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">400</span>)
+  y = a * x**<span class="hljs-number">2</span> + b * x + c
+
+  <span class="hljs-comment"># グラフ描画</span>
+  fig, ax = plt.subplots()
+  ax.plot(x, y, label=<span class="hljs-string">f&#x27;y = <span class="hljs-subst">{a}</span> x^2 + <span class="hljs-subst">{b}</span>x + <span class="hljs-subst">{c}</span>&#x27;</span>)
+  ax.axhline(<span class="hljs-number">0</span>, color=<span class="hljs-string">&#x27;black&#x27;</span>, linewidth=<span class="hljs-number">0.5</span>)
+  ax.axvline(<span class="hljs-number">0</span>, color=<span class="hljs-string">&#x27;black&#x27;</span>, linewidth=<span class="hljs-number">0.5</span>)
+  ax.set_xlabel(<span class="hljs-string">&quot;x&quot;</span>)
+  ax.set_ylabel(<span class="hljs-string">&quot;y&quot;</span>)
+  ax.grid(<span class="hljs-literal">True</span>)
+  ax.legend()
+  <span class="hljs-keyword">return</span> fig
+
+<span class="hljs-comment"># 初期状態のグラフを生成</span>
+initial_plot = quadratic_plot(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)  <span class="hljs-comment"># ③</span>
+
+<span class="hljs-comment"># Gradioインターフェースの定義</span>
+demo = gr.Interface(                  <span class="hljs-comment"># ④</span>
+  fn=quadratic_plot,
+  inputs=[                            <span class="hljs-comment"># ⑤</span>
+    gr.Slider(minimum=-<span class="hljs-number">10</span>, maximum=<span class="hljs-number">10</span>, step=<span class="hljs-number">0.1</span>, value=<span class="hljs-number">1</span>, label=<span class="hljs-string">&quot;係数 a&quot;</span>),
+    gr.Slider(minimum=-<span class="hljs-number">10</span>, maximum=<span class="hljs-number">10</span>, step=<span class="hljs-number">0.1</span>, value=<span class="hljs-number">0</span>, label=<span class="hljs-string">&quot;係数 b&quot;</span>),
+    gr.Slider(minimum=-<span class="hljs-number">10</span>, maximum=<span class="hljs-number">10</span>, step=<span class="hljs-number">0.1</span>, value=<span class="hljs-number">0</span>, label=<span class="hljs-string">&quot;係数 c&quot;</span>)
+  ],
+  outputs=gr.Plot(value=initial_plot),  <span class="hljs-comment"># ⑥</span>
+  live=<span class="hljs-literal">True</span>,
+  title=<span class="hljs-string">&quot;二次関数グラフ表示アプリ&quot;</span>,
+  description=<span class="hljs-string">&quot;下のスライダーで係数a,b,cを調整するとy=ax^2+bx+cのグラフが自動更新されます。&quot;</span>
+)
+
+demo.launch()
+</code></pre>
+<p>リスト10の実行結果は図10の通りです。左側に係数の入力欄が表示され、 右側に入力された係数に応じた2次関数のグラフが表示されます。</p>
+<p>[図10●リスト10の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/gr_graph.png" width="480px" />
+<p>プログラムを説明していきます。</p>
+<p>①は、初期表示のタイミングの問題でエラーにならないようにするための設定です。matplotlibの描画バックエンドとしてAggを使用するものです。</p>
+<p>②の関数quadratic_plotの処理は、Streamlit版の「st_graph.py」の⑨以降の処理とほぼ同じなので説明は割愛します。
+関数の返り値として、MatPlotlibのFigureを返します。</p>
+<p>③初期値としてa=1,b=0,c=0を渡し、最初に表示するグラフ（初期プロット）を生成します。</p>
+<p>④でGradioのgr.Interfaceを呼び出します。⑤のinputsはBMIで指定した形と同様ですが、outputsではmatplotlibのFigureを受けとって表示できるグラフ描画のコンポーネントgr.Plotl()を設定します(⑥)。</p>
+<h3 id="チャットaiを作ってみよう">チャットAIを作ってみよう!</h3>
+<p>さて、ここまでは基本的なUIコンポーネントを使用し、幾つかのサンプルアプリケーションを作ってきました。
+最後に、大規模言語モデル(LLM)の生成AIを呼びだして会話を行う、チャットAIアプリケーションをそれぞれで作ってみます。</p>
+<p>接続先としてはOpenAI互換のAPIを経由して、ローカルLLMを含む各種のLLMを呼び分けられるようにしてみます。</p>
+<p>まず、StreamlitとGradioに共通する準備を行います。</p>
+<h4 id="準備1ollamaのインストールと動作確認">準備1：ollamaのインストールと動作確認</h4>
+<p>Ollamaは、ローカル環境で手軽にAIモデルを実行できるツールです。ローカルLLMを実行する場合、公式サイト(<a href="https://ollama.com/">https://ollama.com/</a>)からollamをダウンロードしてインストールします。使用するOSに応じた説明を参考にしてインストールしてみてください。
+macOSの場合はHomebrewでもインストールできます。</p>
+<p>ollamaのインストール完了後、LLMモデルを以下のようにダウンロードし(①)、
+APIサーバを起動します(②)。このとき、curlコマンドで動作確認を行っておくと良いでしょう(③)。
+以下ではモデルとしてgemma2を利用しています。</p>
+<pre><code class="language-bash">❯ ollama pull gemma2    <span class="hljs-comment"># ①</span>
+❯ ollama serve          <span class="hljs-comment"># ②</span>
+❯ curl http://localhost:11434/v1/models <span class="hljs-comment"># ③</span>
+</code></pre>
+<h4 id="準備2dotenvによる環境変数の設定">準備2：dotenvによる環境変数の設定</h4>
+<p>dotenvは、一般にAPIキーなどのシークレット情報をハードコーディングすることを避けるために使用するものです。
+本稿のサンプルコードでは、.envファイルを異なる接続先LLMを簡単に切り替えて使用する目的でも使用します。
+APIキーとエンドポイント、モデルの情報を「.env」という名前でコマンドを実行するディレクトリに保存しておきます。</p>
+<p>.envで、ローカルで起動しているollamaに接続するための設定は以下のとおりです。</p>
+<pre><code>OPENAI_API_KEY=dummy
+OPENAI_BASE_URL=http://localhost:11434/v1
+MODEL=gemma2
+</code></pre>
+<p>OpenAIのAPIを使用する場合は、別途OpenAIのAPIキーを入手した上で例えば以下のようにします。</p>
+<pre><code>OPENAI_API_KEY=&lt;OpenAIのAPIキー&gt;
+MODEL=gpt-4o-mini
+</code></pre>
+<p>APIキーは外部の公開リポジトリなどに公開してしまわないように注意してください。
+なお、.envで設定する内容は環境変数で設定しても構いません。</p>
+<h4 id="準備3生成aiを使用するための共通モジュール定義">準備3：生成AIを使用するための共通モジュール定義</h4>
+<p>Streamlit、Gradioで共通して使用するユーティティ関数を定義したモジュールを作成しておきます(リスト11)。</p>
+<p>[リスト11●chatai_util.py。チャットAIのための共通ユーティリティ]</p>
+<pre><code class="language-python"><span class="hljs-comment"># chatai_util.py</span>
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Generator, <span class="hljs-type">List</span>, <span class="hljs-type">Dict</span>  <span class="hljs-comment"># ①</span>
+<span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> OpenAI  <span class="hljs-comment"># ②</span>
+<span class="hljs-keyword">from</span> dotenv <span class="hljs-keyword">import</span> load_dotenv  <span class="hljs-comment"># ③</span>
+<span class="hljs-keyword">import</span> os
+
+load_dotenv()  <span class="hljs-comment"># ④</span>
+
+client = OpenAI(
+  api_key=os.getenv(<span class="hljs-string">&quot;OPENAI_API_KEY&quot;</span>)    <span class="hljs-comment"># ⑤</span>
+)
+
+<span class="hljs-comment"># ⑥</span>
+SYSTEM_PROMPT = {<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;system&quot;</span>,
+                 <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;あなたは親切なAIチャットボットです。\
+                 日本語で回答してください。&quot;</span>}
+
+<span class="hljs-comment"># ⑦</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">chat_completion_stream</span>(<span class="hljs-params">messages: <span class="hljs-type">List</span>[<span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">str</span>]]</span>) -&gt; Generator:
+  response = client.chat.completions.create(
+    model=os.getenv(<span class="hljs-string">&quot;MODEL&quot;</span>),  <span class="hljs-comment"># ⑧</span>
+    messages=messages,
+    stream=<span class="hljs-literal">True</span>,               <span class="hljs-comment"># ⑨</span>
+  )
+  <span class="hljs-keyword">return</span> response               <span class="hljs-comment"># ⑩</span>
+</code></pre>
+<p>リスト11を解説していきます。</p>
+<p>①では、ここからの説明で使用するために、Pythonの型ヒント用の型をいくつかインポートしておきます。</p>
+<p>②では、OpenAIが提供する生成AIのAPIを呼び出すためのライブラリ内のOpenAIクラスをインポートしています。ollama含め多くのLLMやプラットフォームはOpenAI互換のAPIを備えているものが多いので、こちらを経由してAPIを呼び出すことで切り替えが容易になります。</p>
+<p>③④では、.envファイルが存在すればそれを読み込み、環境変数としてセットしてくれるdotenvライブラリをインポートし使用しています。</p>
+<p>⑤では引数「api_key」を環境変数から設定します。</p>
+<p>⑥LLMに与える「システムプロンプト」をOpenAIのAPIに送るメッセージの型式で定義しています。具体的にはメッセージの話者を表わすroleキーと、メッセージ本体をあらすcontentのキーをもった辞書の型式です。一般にOpenAI互換のAPIではroleには表2のものがあり、用途に応じて使用します。</p>
+<p>[表2●OpenAI互換のAPIにおけるメッセージのrole種別]</p>
+<table>
+<thead>
+<tr>
+<th>role</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>system</td>
+<td>システムプロンプト</td>
+</tr>
+<tr>
+<td>user</td>
+<td>人間がLLMに対して送るメッセージ</td>
+</tr>
+<tr>
+<td>assistant</td>
+<td>AIアシスタントからの回答</td>
+</tr>
+</tbody>
+</table>
+<p>⑦で定義している関数「chat_completion_stream()」はチャト履歴をあらわす辞書のリストを受け取り、ストリーミング応答をジェネレータとして返す関数です。</p>
+<p>⑧では使用する生成AIのモデルを環境変数から取得します。</p>
+<p>⑨ではストリーミングモードを有効にしています。この変数がTrueか否かで返り値の型がジェネレータどうかが決定されます。</p>
+<p>⑩では、OpenaAIのAPI呼び出しの結果であるジェネレータとしてのレスポンスをそのまま返します。</p>
+<h4 id="streamlitでチャットaiを作る">StreamlitでチャットAIを作る</h4>
+<p>さて、準備が整いましたので、StreamlitでチャットAIを実装していきます。
+まず以下のコマンドを実行して、必要なライブラリをインストールしておきます。</p>
+<pre><code class="language-bash">❯ pip install openai python-dotenv
+</code></pre>
+<p>リスト12がStreamlitによるチャットAIの実装コードになります。</p>
+<p>[リスト12●「st_chatai.py」。Streamlitで作ったチャットAIのプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># st_chatai.py</span>
+<span class="hljs-keyword">import</span> streamlit <span class="hljs-keyword">as</span> st
+<span class="hljs-keyword">from</span> chatai_util <span class="hljs-keyword">import</span> chat_completion_stream, SYSTEM_PROMPT  <span class="hljs-comment"># ①</span>
+
+<span class="hljs-keyword">if</span> <span class="hljs-string">&quot;message_history&quot;</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> st.session_state:  <span class="hljs-comment"># ②</span>
+  st.session_state.message_history = [SYSTEM_PROMPT]
+
+st.title(<span class="hljs-string">&quot;チャットAI(Streamlit)&quot;</span>)
+
+<span class="hljs-keyword">if</span> user_input := st.chat_input(<span class="hljs-string">&quot;聞きたいことを入力してね！&quot;</span>):  <span class="hljs-comment"># ③</span>
+  <span class="hljs-comment"># 入力文字列をチャット履歴に追加</span>
+  st.session_state.message_history.append(  <span class="hljs-comment"># ④</span>
+    {<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: user_input}
+  )
+  <span class="hljs-comment"># チャット会話を表示する</span>
+  <span class="hljs-keyword">for</span> message <span class="hljs-keyword">in</span> st.session_state.message_history:  <span class="hljs-comment"># ⑤</span>
+    <span class="hljs-keyword">if</span> message[<span class="hljs-string">&quot;role&quot;</span>] != <span class="hljs-string">&quot;system&quot;</span>:
+      <span class="hljs-keyword">with</span> st.chat_message(message[<span class="hljs-string">&quot;role&quot;</span>]):  <span class="hljs-comment"># ⑥</span>
+        st.markdown(message[<span class="hljs-string">&quot;content&quot;</span>])  <span class="hljs-comment"># ⑦</span>
+
+  <span class="hljs-keyword">with</span> st.chat_message(<span class="hljs-string">&#x27;ai&#x27;</span>):  <span class="hljs-comment"># ⑧</span>
+    <span class="hljs-comment"># AIの応答をストリームで取得・表示</span>
+    answer = st.write_stream(chat_completion_stream(  <span class="hljs-comment"># ⑨</span>
+      st.session_state.message_history
+    ))
+  <span class="hljs-comment"># 回答文字列をチャット履歴に追加</span>
+  st.session_state.message_history.append(  <span class="hljs-comment"># ⑩</span>
+    {<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: answer}
+  )
+</code></pre>
+<p>このプログラムの実行の様子を図12に示します。
+ChatGPTのように生成AIとチャットすることができます。
+会話は内部的にチャット履歴として保持されていて、
+先行する会話を元にした回答を得ることもできます。</p>
+<p>[図12●リスト12の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/st_chatai.png?" width="480px" />
+<p>リスト12について解説していきます。</p>
+<p>①では「準備」で作成しておいた、生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。</p>
+<p>②では、Streamlitのセッション状態を保持する変数「st.session_state」に、チャット履歴の初期値を設定します。
+「message_history」というキーがない場合、最初のアクセスまたは未定義状態と判断し、システムプロンプトを含むチャット履歴を初期設定します。</p>
+<p>③で「st.chat_input()」はチャット入力欄を含む、チャット画面のためのStreamlitのUIコンポーネントです。
+「chat_input()」は少し動作が特殊で、画面の下部にチャット入力欄が固定されるようなレイアウトになります。</p>
+<p>④入力された文字列をroleが&quot;user&quot;の利用者メッセージとして、チャット履歴の末尾に追加します。</p>
+<p>⑤現在までの対話履歴を、システムプロンプトを除いて表示していきます。</p>
+<p>⑥⑦「st.chat_message()」をwith句を使って呼び出すと、メッセージ中のroleに対応するアイコンを表示した上で、メッセージ内容を「st.write()」などで表示することができます。</p>
+<p>⑧⑨LLMからの応答メッセージを表示します。「st.write_stream()」はOpenAI互換のストリーム
+が返すジェネレータに対応しているので、呼び出す「chat_completion_stream()」の返り値をそのまま渡すことができます。</p>
+<p>⑩AIからの応答メッセージをチャット履歴の末尾に追加します。</p>
+<h4 id="gradioでチャットaiを作る">GradioでチャットAIを作る</h4>
+<p>さて、今後はGradio版です。
+リスト13がGradioによるチャットAIの実装コードになります。</p>
+<p>[リスト13●gr_chatai.py。Gradioで作ったチャットAIのプログラム]</p>
+<pre><code class="language-python"><span class="hljs-comment"># gr_chatai.py</span>
+<span class="hljs-keyword">import</span> gradio <span class="hljs-keyword">as</span> gr
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Generator, <span class="hljs-type">List</span>, <span class="hljs-type">Dict</span>
+<span class="hljs-keyword">from</span> chatai_util <span class="hljs-keyword">import</span> chat_completion_stream, SYSTEM_PROMPT  <span class="hljs-comment"># ①</span>
+
+<span class="hljs-comment"># ②</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">chat_response</span>(<span class="hljs-params">message: <span class="hljs-built_in">str</span>, history: <span class="hljs-type">List</span>[<span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">str</span>]]</span>) -&gt; Generator:
+  <span class="hljs-comment"># ③ユーザからのメッセージ</span>
+  user_message = {<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: message}
+  <span class="hljs-comment"># ④生成AIのレスポンスはチャンク列のジェネレータ</span>
+  response = chat_completion_stream([
+    SYSTEM_PROMPT,
+    *history,
+    user_message
+  ])
+  ai_message = <span class="hljs-string">&quot;&quot;</span>  <span class="hljs-comment"># ⑤</span>
+  <span class="hljs-comment"># ⑥チャンク列のジェネレータに対してループをまわす</span>
+  <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> response:
+    chunk = item.choices[<span class="hljs-number">0</span>].delta.content
+    <span class="hljs-keyword">if</span> chunk <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+      <span class="hljs-comment"># チャンクJSONのdelta部分を変数ai_messageに累積追加する</span>
+      ai_message += chunk <span class="hljs-comment"># ⑦</span>
+      <span class="hljs-keyword">yield</span> ai_message  <span class="hljs-comment"># ⑧</span>
+
+demo = gr.ChatInterface(fn=chat_response, <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;messages&quot;</span>,
+                        title=<span class="hljs-string">&quot;チャットAI(Gradio)&quot;</span>)  <span class="hljs-comment"># ⑨</span>
+demo.launch()
+</code></pre>
+<p>リスト13の実行例を図13に示します。こちらもStreamlit版と機能はほぼ同等で、
+先行する会話を元にしたチャット回答を得ることができます。</p>
+<p>[図13●リスト13の実行例]</p>
+<img style="border: 1px solid" src="file:////Users/ueha-j/work/202502/streamlit-article/docs/img/gr_chatai.png" width="480px" />
+<p>Gradio版のコードについて解説していきましょう。</p>
+<p>①では「準備」で作成しておいた、生成AIアクセス用の共通モジュール「chatai_util.py」で定義した機能をインポートします。</p>
+<p>②で定義する関数「chat_response」は、Gradioが用意している高レベルのチャットコンポーネント「gr.ChatInterface()」にラッピングさせる関数です。
+「gr.ChatInterface()」はそれ自身でチャット履歴を管理する機能を持っているので、Streamlit版とは異なり、チャット履歴を管理するコードを書く必要がありません。</p>
+<p>③では、LLMに送信するユーザメッセージ「user_message」を作成します。ここではロールとして&quot;user&quot;を設定します。</p>
+<p>④「SYSTEM_PROMPT」と「gr.ChatInterfaceから渡されたチャット履歴」と「ユーザメッセージ」を、
+生成AIアクセス用の共通モジュール「chatai_util.py」で定義した関数「chat_completion_stream()」を使ってLLMに送信します。
+ストリーミング形式(streaming=True)で応答を取得するので、結果はGeneratorとなります。</p>
+<p>⑤AIからのチャンク化された応答(JSON型式の応答断片)を取り出して、それを累積的に結合して保持するための変数「ai_message」を用意します。
+⑥⑦では、関数「chat_completion_stream()」の呼び出しで取得したチャンクを1つずつ処理して、ai_messageに追加していきます。</p>
+<p>⑧で、途中経過としての応答文字列「ai_message」をyieldで返します。</p>
+<p>この関数「chat_response()」全体では、LLMが返却するチャンク(JSON型式の応答断片)のジェネレータを、徐々に累積されて伸びていく応答文字列のジェネレータに変換していることになります。APIが返す区切りでの「応答断片のジェネレータ」ではないことに注意が必要です。</p>
+<p>⑨Gradioでの高レベルなチャットコンポーネントである「gr.ChatInterface()」を準備します。
+引数fnには、「増加(もしくは変化)していく文字列のジェネレータ」を返す関数を渡します。ここで引数type=&quot;messages&quot;は、チャットのメッセージ形式で表示するように指定しています。タイトルも指定しています。</p>
+<h3 id="streamlitとgradioのコード比較">StreamlitとGradioのコード比較</h3>
+<p>Streamlit版・Gradio版ともに、実装コードは機能量に対して非常にコンパクトであり、チャットAIを簡潔に実現できる高機能なライブラリが活用されている点は共通しています。</p>
+<p>強いて違いを挙げるとすれば、Streamlitのチャット機能にはチャット履歴の管理が含まれていないため、その分の実装コードがやや増えるという点があります。ただし、Gradioでも今回使用した高レベルな「gr.ChatInterface()」ではなく、低レベルな「gr.Chatbot()」コンポーネントを用いた場合は、同様にコード量が増えるでしょう。</p>
+<p>また、Streamlitの「st.write_stream()」コンポーネントは、OpenAIのストリーミング呼び出しが返すジェネレータをそのまま受け付け、チャンク処理を自動で行えるため、Gradioよりもコード量が少なくなるという特長があります。</p>
+<p>ただし、これらは表面的な違いに過ぎません。StreamlitとGradioの本質的な違いは、イベントハンドリングと画面更新の設計思想にあり、それに基づくコードの記述方法が異なる点です（詳しくはコラム「ユニークなStreamlitのイベントハンドリングと画面更新」を参照）。この違いと、それによって「インタラクティブなワークフロー」がStreamlitでは書きやすいという効果がプロジェクトに適しているかどうかが、StreamlitとGradioの選択を決める重要な要素となるでしょう。</p>
+<p>さらに、機能やUIコンポーネントの充実度は、両ライブラリが相互に影響を受けながら活発に開発が進められているため、一概に比較することはできません。しかし、プロジェクトで必要な機能が提供されているかは、選択の大きな判断基準になりそうです。</p>
+<div style="border: 1px solid #ccc; border-radius: 1rem; padding: 1rem; width: 90%l; background: lightblue">
+<h5 id="コラム-ユニークなstreamlitのイベントハンドリングと画面更新">コラム: ユニークなStreamlitのイベントハンドリングと画面更新</h5>
+<p>Gradioのイベントハンドリングは、比較的オーソドックスです。各UIコンポーネントが個別のイベントハンドラを持ち、特定のイベントが発生した際に対応する処理を実行し、画面を更新する仕組みです。
+この考えかたのもと、「gr.Interface()」などの引数として「<strong>表示したい値を計算せよというコールバック</strong>」にユーザロジックを渡すことがアプリの基本構造です。</p>
+<p>一方、Streamlitのイベントハンドリングと画面更新は、Gradioとはまったく異なるアプローチを取っています。Streamlitでは、各UIコンポーネントにイベントハンドラが紐付いているわけではなく、
+イベントが発生するとプログラム全体が再実行されます。つまり、<strong>プログラム全体がイベントハンドラとして機能する</strong>と言えます。</p>
+<p>この設計のため、「どのコンポーネントで何が起きたか」という判定は、コンポーネントの返り値を使って行います。たとえば、次のようなコードでは、st.input() の返り値を user_input に格納し、値が入力された場合にのみ処理を実行します。</p>
+<pre><code>if user_input := st.text_input(&quot;入力してください&quot;):
+    # user_input に基づく処理を実行
+</code></pre>
+<p>この if 文のブロック内が、特定のイベントに限定したイベントハンドラとして機能しており、変数user_inputにはイベント発生元の値が格納されます。</p>
+<p>なお、本稿では詳しく触れていませんが、このイベントハンドリングの特性上、Streamlitではキャッシュ処理や状態管理が特に重要になります。適切に活用することで、効率的な画面更新を行うことが可能になります。</p>
+</div>
+<h2 id="まとめ">まとめ</h2>
+<p>本稿では、人気のPython Web UIフレームワーク「Streamlit」と「Gradio」を紹介しました。</p>
+<p>どちらも、Pythonコードだけで直感的にアプリを開発できるという大きな魅力を持ち、記述量が少なく、学習コストの低さが特長です。</p>
+<p>本稿で触れたのは両者の機能のごく一部にすぎませんが、いずれも充実したドキュメントが整備され、活発に開発が続けられています。習熟すれば、迅速なアプリ開発の強力な武器となるでしょう。</p>
+<p>できれば本稿を機会にぜひ両方を試し、それぞれの特性を理解しながら、自身の用途に合ったものを選び、使い分けていただければ幸いです。</p>
+
+            
+            
+        </body>
+        </html>
